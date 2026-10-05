@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Production build artifacts
+client/build/
+
+# Environment files and credentials
+.env
+*.env
+client/.env.txt
+server/.env
+
+# Temporary archives, logs, and scripts
+veritas.tar.gz
+*.tar.gz
+*.zip
+*.log
+deploy_package/
+scratch/
+test_*.py
+find_*.py
+server/test*.js
+server/data/mongodb/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db

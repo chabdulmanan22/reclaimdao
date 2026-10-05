@@ -1,0 +1,11 @@
+node_modules
+client/node_modules
+server/node_modules
+server/data/mongodb
+.git
+.gitignore
+.env
+build
+client/build
+*.tar.gz
+*.log

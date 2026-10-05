@@ -1,0 +1,20 @@
+{
+  "name": "doa-voting-app",
+  "version": "1.0.0",
+  "description": "Full-stack voting and contribution web application",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "npm run dev --prefix server",
+    "client": "npm start --prefix client",
+    "build": "npm run build --prefix client",
+    "install-deps": "npm install && npm install --prefix server && npm install --prefix client",
+    "start": "npm start --prefix server"
+  },
+  "keywords": ["voting", "contribution", "react", "node", "express", "mongodb"],
+  "author": "DOA Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

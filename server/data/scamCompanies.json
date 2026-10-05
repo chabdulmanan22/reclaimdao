@@ -1,0 +1,858 @@
+[
+  {
+    "id": "scam_2",
+    "name": "OneCoin",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.889Z"
+  },
+  {
+    "id": "scam_3",
+    "name": "PlusToken",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.889Z"
+  },
+  {
+    "id": "scam_4",
+    "name": "WoToken",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.889Z"
+  },
+  {
+    "id": "scam_5",
+    "name": "Mirror Trading International (MTI)",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.889Z"
+  },
+  {
+    "id": "scam_6",
+    "name": "USI-Tech",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.889Z"
+  },
+  {
+    "id": "scam_7",
+    "name": "PlexCoin",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.889Z"
+  },
+  {
+    "id": "scam_8",
+    "name": "Centra Tech",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.889Z"
+  },
+  {
+    "id": "scam_9",
+    "name": "BitClub Network",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.889Z"
+  },
+  {
+    "id": "scam_10",
+    "name": "DavorCoin",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_11",
+    "name": "Forsage",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_12",
+    "name": "GainBitcoin / GBMiners",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_13",
+    "name": "MiningMax",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_14",
+    "name": "Thodex",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_15",
+    "name": "My Big Coin",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_16",
+    "name": "PayCoin / PPCoin",
+    "category": "Historic / Infamous Ponzi & Fraud Cases",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_17",
+    "name": "Squid Game Token ($SQUID)",
+    "category": "Rug Pulls / Pump-and-Dump / Scam Tokens",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_18",
+    "name": "Banana.Fund",
+    "category": "Rug Pulls / Pump-and-Dump / Scam Tokens",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_19",
+    "name": "PonziCoin",
+    "category": "Rug Pulls / Pump-and-Dump / Scam Tokens",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_20",
+    "name": "DIO token",
+    "category": "Rug Pulls / Pump-and-Dump / Scam Tokens",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_21",
+    "name": "Bitcoiin",
+    "category": "Rug Pulls / Pump-and-Dump / Scam Tokens",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_22",
+    "name": "Xuex.net",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_23",
+    "name": "Tradecage",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_24",
+    "name": "Swaper.io",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_25",
+    "name": "Pqtic.com",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_26",
+    "name": "Ultrax.io",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_27",
+    "name": "Pure-Exchange.com",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_28",
+    "name": "Strideex.com",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_29",
+    "name": "M.Slabu.com",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_30",
+    "name": "Cjb Crypto",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_31",
+    "name": "Crymatic.com",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_32",
+    "name": "Coin-team.com",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_33",
+    "name": "DLB Exchange",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_34",
+    "name": "Nestfincs.pro",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_35",
+    "name": "Rononlineedu.com",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_36",
+    "name": "Trade-dex.net",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_37",
+    "name": "Csecrypto.com",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_38",
+    "name": "HorizonPointe Financial Group (HPFG)",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_39",
+    "name": "Cryptoipo.net",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_40",
+    "name": "1 Broker",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_41",
+    "name": "Bitcarda",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_42",
+    "name": "CenturionBooster",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_43",
+    "name": "Diamond Reserve Club",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_44",
+    "name": "Envion AG",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_45",
+    "name": "Kromtech",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_46",
+    "name": "YieldNodes",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_47",
+    "name": "Bibox scams (fake support impersonations)",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_48",
+    "name": "Investment mining farm fraud sites",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_49",
+    "name": "Random airdrop scams",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_50",
+    "name": "Impersonated exchange support sites",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_51",
+    "name": "WoToken clone network schemes",
+    "category": "Fake / Rogue Platforms and Exchanges",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_52",
+    "name": "Nova Tech FX",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_53",
+    "name": "BitFunds",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_54",
+    "name": "Energise Trade",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_55",
+    "name": "B.E.Kxpro Foundation",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_56",
+    "name": "Cryptostarbot",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_57",
+    "name": "Paytrading",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_58",
+    "name": "WTC",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_59",
+    "name": "Greencorp Investments",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_60",
+    "name": "Payswitchub",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_61",
+    "name": "MT7 coin",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_62",
+    "name": "Bitfreds",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_63",
+    "name": "CoinEquityx",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_64",
+    "name": "Quest Option",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_65",
+    "name": "Tymetradepro",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_66",
+    "name": "Fieldia",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_67",
+    "name": "Equity",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_68",
+    "name": "IC-Crypto",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_69",
+    "name": "StoneBridgeVentures",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_70",
+    "name": "EZ Invest",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_71",
+    "name": "Wefinancial",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_72",
+    "name": "MGN Group",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_73",
+    "name": "Quantumstar",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_74",
+    "name": "Prime-CC",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_75",
+    "name": "Orcalnvestment",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_76",
+    "name": "BTrade CRG",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_77",
+    "name": "TradeVision CRG",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_78",
+    "name": "Purpl",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_79",
+    "name": "Trade365 CRG",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_80",
+    "name": "Helios Expert",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_81",
+    "name": "WilliamYoungs CRG",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_82",
+    "name": "Bulltrend",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_83",
+    "name": "NTC",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_84",
+    "name": "Markethaven",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_85",
+    "name": "Fintechreserve",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_86",
+    "name": "RevenueCenter",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_87",
+    "name": "Banxso",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_88",
+    "name": "FICRM 2022",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_89",
+    "name": "Jpmreview",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_90",
+    "name": "IIA+",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_91",
+    "name": "Crownmanagers",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_92",
+    "name": "FXAlta New CRG",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_93",
+    "name": "SigmaCapitals",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_94",
+    "name": "Gemini-Tangskt",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_95",
+    "name": "Torque",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_96",
+    "name": "Witlink",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_97",
+    "name": "Abeonacoin",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_98",
+    "name": "ABX Exchange",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_99",
+    "name": "Analyfx",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_100",
+    "name": "Andex trade",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_101",
+    "name": "Ancoin Exchange",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_102",
+    "name": "AstroFx",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_103",
+    "name": "BBIC",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_104",
+    "name": "Binarymate",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_105",
+    "name": "Binary Online",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_106",
+    "name": "Binary Tilt",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_107",
+    "name": "Bit Ocean",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  },
+  {
+    "id": "scam_108",
+    "name": "Bit Pad",
+    "category": "Other Frequently Reported Scam Programs / Platforms",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2026-08-19T22:45:27.890Z"
+  }
+]

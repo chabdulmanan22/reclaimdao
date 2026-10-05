@@ -1,0 +1,54 @@
+[
+  {
+    "_id": "usr_1788543754553_917",
+    "firstName": "Daniel",
+    "lastName": "Daniel",
+    "email": "aishsana786@gmail.com",
+    "password": "$2a$10$8gExz6H0WPhFHSlm0/g0v.J2o6hsFDxhYj61uoZG.mX0PYvjCRwwS",
+    "role": "user",
+    "isActive": true,
+    "referralCode": "1a1ee21dad13",
+    "isEmailVerified": true,
+    "createdAt": "2026-09-04T17:42:34.553Z"
+  },
+  {
+    "_id": "usr_1788543474036_922",
+    "firstName": "REHMAN",
+    "lastName": "REHMAN",
+    "email": "aishasana256@gmail.com",
+    "password": "$2a$10$c/MKTI4two14O8Hr8uxgD.iK9HknXznPgx7qgWQBkY85dkLDayOai",
+    "role": "user",
+    "isActive": true,
+    "referralCode": "a8ed3f4543d1",
+    "isEmailVerified": true,
+    "createdAt": "2026-09-04T17:37:54.036Z"
+  },
+  {
+    "_id": "usr_1788543165240_909",
+    "firstName": "Alice",
+    "lastName": "Smith",
+    "email": "alice_1788543164207@example.com",
+    "password": "$2a$10$mZzCn.leEGig4b6uzWXSkuVno7Fau5bgL69OQG8wjDRy3pQP7YOr2",
+    "role": "user",
+    "isActive": true,
+    "referralCode": "585bc185ee06",
+    "isEmailVerified": false,
+    "emailVerificationToken": "1cd2ac9864eb2383611e4b95260c733497c1a70344ab014b7492ae73ab34060e",
+    "emailVerificationExpires": 1788629565240,
+    "createdAt": "2026-09-04T17:32:45.240Z"
+  },
+  {
+    "_id": "usr_1788542434987_966",
+    "firstName": "william",
+    "lastName": "william",
+    "email": "ashsana54@gmail.com",
+    "password": "$2a$10$z0aC.IJrge0TZn2Fd1xgEOIpIJ0wPE.sY7bMFhQRILP2syamahjM.",
+    "role": "user",
+    "isActive": true,
+    "referralCode": "cdd9fe67dea4",
+    "isEmailVerified": true,
+    "createdAt": "2026-09-04T17:20:34.987Z",
+    "username": "ashsana54",
+    "updatedAt": "2026-09-04T17:25:15.856Z"
+  }
+]

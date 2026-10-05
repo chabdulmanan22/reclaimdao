@@ -1,0 +1,15 @@
+# Dockerfile for Backend Service
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY server/package*.json ./
+RUN npm install --legacy-peer-deps --omit=dev
+
+# Copy server code
+COPY server ./
+
+EXPOSE 8000
+
+CMD ["node", "index.js"]

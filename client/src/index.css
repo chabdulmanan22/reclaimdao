@@ -1,0 +1,540 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Design System Tokens (Global CSS)
+   - Charcoal (#2F2F34): Primary Content & Heading Text
+   - Cool Gray (#8B9098): Secondary Text, Neutral Accents, Muted Borders
+   - Electric Blue (#3D7EFF): All Buttons, Actions, Active Highlights
+   - Light Base: Clean White (#FFFFFF) & Soft Canvas (#F8FAFC)
+   ========================================================================== */
+
+:root {
+  /* User Palette: Exact Hex Codes */
+  --color-charcoal: #2F2F34;
+  --color-cool-gray: #8B9098;
+  --color-electric-blue: #3D7EFF;
+
+  /* Extended Shades & States */
+  --color-charcoal-dark: #1E1E21;
+  --color-charcoal-light: #4A4A52;
+  --color-charcoal-subtle: #63636E;
+
+  --color-cool-gray-light: #DCE1E8;
+  --color-cool-gray-subtle: #F1F3F5;
+  --color-cool-gray-dark: #6B7078;
+
+  --color-electric-blue-hover: #2667F5;
+  --color-electric-blue-active: #1750D0;
+  --color-electric-blue-subtle: #F0F5FF;
+  --color-electric-blue-border: #BAD6FF;
+
+  /* Typography / Content Colors */
+  --text-primary: #2F2F34;        /* Primary content text */
+  --text-secondary: #8B9098;      /* Secondary & helper text */
+  --text-muted: #9DA3AC;
+  --text-inverse: #FFFFFF;
+  --text-brand: #3D7EFF;
+
+  /* Surface & Base Backgrounds (Light Theme) */
+  --bg-base: #FFFFFF;
+  --bg-page: #F8FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-surface-subtle: #F4F6F9;
+  --bg-surface-tint: #F0F5FF;
+
+  /* Borders & Dividers */
+  --border-light: #E2E8F0;
+  --border-subtle: #DCE1E8;
+  --border-medium: #8B9098;
+  --border-brand: #3D7EFF;
+
+  /* Button Tokens: Pure Matte Finish */
+  --btn-primary-bg: #3D7EFF;
+  --btn-primary-hover: #2667F5;
+  --btn-primary-active: #1750D0;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-shadow: none;
+  --btn-primary-shadow-hover: none;
+
+  /* Status Colors */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #3D7EFF;
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  html {
+    font-size: 15px;
+    overflow-x: clip;
+    max-width: 100vw;
+    width: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+    max-width: 100vw;
+    width: 100%;
+    line-height: 1.6;
+  }
+
+  #root, .App {
+    overflow-x: clip;
+    max-width: 100vw;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-page);
+  }
+
+  /* Headings typography: bold, crisp, charcoal */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+
+  /* Paragraphs and general content text */
+  p {
+    color: var(--text-primary);
+  }
+
+  /* Links adhere to Electric Blue */
+  a {
+    color: var(--color-electric-blue);
+    transition: color 0.2s ease;
+  }
+  a:hover {
+    color: var(--color-electric-blue-hover);
+  }
+}
+
+@layer components {
+  /* ==========================================================================
+     Button System: ALL primary buttons styled with Electric Blue (#3D7EFF)
+     ========================================================================== */
+  .btn-primary,
+  .btn-gold,
+  .btn-orange,
+  .btn-electric,
+  button.btn-primary {
+    background-color: var(--btn-primary-bg) !important;
+    background-image: none !important;
+    color: var(--btn-primary-text) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    padding: 0.85rem 1.75rem;
+    border-radius: 0px !important;
+    border: none !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.15s ease;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  .btn-primary:hover,
+  .btn-gold:hover,
+  .btn-orange:hover,
+  .btn-electric:hover,
+  button.btn-primary:hover {
+    background-color: var(--btn-primary-hover) !important;
+    background-image: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  .btn-primary:active,
+  .btn-gold:active,
+  .btn-orange:active,
+  .btn-electric:active,
+  button.btn-primary:active {
+    background-color: var(--btn-primary-active) !important;
+    background-image: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  .btn-secondary {
+    background-color: var(--color-electric-blue-subtle) !important;
+    background-image: none !important;
+    color: var(--color-electric-blue) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    padding: 0.85rem 1.75rem;
+    border-radius: 0px !important;
+    border: 1px solid var(--color-electric-blue-border);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background-color: #E0ECFF !important;
+    color: var(--color-electric-blue-hover) !important;
+    border-color: var(--color-electric-blue);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    background-color: transparent !important;
+    color: var(--color-electric-blue) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    padding: 0.85rem 1.75rem;
+    border-radius: 0px !important;
+    border: 2px solid var(--color-electric-blue);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .btn-outline:hover {
+    background-color: var(--color-electric-blue) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background-color: transparent !important;
+    color: var(--color-charcoal) !important;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    border-radius: 0px !important;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+  .btn-ghost:hover {
+    background-color: var(--color-cool-gray-subtle) !important;
+    color: var(--color-electric-blue) !important;
+  }
+
+  /* ==========================================================================
+     Cards & Surfaces: Sharp Geometric Clean Light Base (corners blkl nok waly)
+     ========================================================================== */
+  .card {
+    background-color: #FFFFFF;
+    border-radius: 0px !important;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 2px 12px -2px rgba(47, 47, 52, 0.04);
+    transition: all 0.25s ease;
+  }
+  .card:hover {
+    border-color: var(--color-cool-gray);
+    box-shadow: 0 8px 20px -4px rgba(47, 47, 52, 0.08);
+  }
+
+  .card-highlight {
+    background-color: #FFFFFF;
+    border-radius: 0px !important;
+    border: 1px solid var(--color-electric-blue-border);
+    box-shadow: 0 2px 12px -2px rgba(61, 126, 255, 0.06);
+  }
+
+  .card-gradient {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+    border-radius: 0px !important;
+    border: 1px solid var(--border-light);
+  }
+
+  /* Replace legacy card-dark with modern clean surface */
+  .card-dark {
+    background-color: #FFFFFF;
+    border-radius: 0px !important;
+    border: 1px solid var(--border-light);
+  }
+
+  /* ==========================================================================
+     Form Inputs & Controls
+     ========================================================================== */
+  .input-field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #FFFFFF;
+    color: var(--text-primary);
+    border: 1px solid var(--color-cool-gray-light);
+    border-radius: 0px !important;
+    outline: none;
+    font-size: 0.95rem;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .input-field::placeholder {
+    color: var(--color-cool-gray);
+  }
+
+  .input-field:focus {
+    border-color: var(--color-electric-blue);
+    box-shadow: 0 0 0 3px rgba(61, 126, 255, 0.18);
+  }
+
+  /* ==========================================================================
+     Text Utilities
+     ========================================================================== */
+  .text-charcoal {
+    color: var(--color-charcoal) !important;
+  }
+
+  .text-coolgray,
+  .text-muted {
+    color: var(--color-cool-gray) !important;
+  }
+
+  .text-electric {
+    color: var(--color-electric-blue) !important;
+  }
+
+  .text-gradient {
+    background-image: linear-gradient(135deg, #3D7EFF 0%, #2667F5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Subtle highlight underline with Electric Blue */
+  .in-highlight {
+    position: relative;
+    background: transparent;
+    z-index: 1;
+    display: inline-block;
+  }
+  .in-highlight::before {
+    content: "";
+    background: rgba(61, 126, 255, 0.25);
+    border-radius: 4px;
+    position: absolute;
+    left: 0;
+    right: -2px;
+    bottom: 2px;
+    height: 6px;
+    z-index: -1;
+  }
+
+  /* Hero & Section Backgrounds (Light Base) */
+  .hero-gradient {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 60%, #F0F5FF 100%);
+  }
+
+  .in-slideshow-gradient {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  }
+
+  /* Badges */
+  .badge-electric {
+    background-color: var(--color-electric-blue-subtle);
+    color: var(--color-electric-blue);
+    border: 1px solid var(--color-electric-blue-border);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .badge-gray {
+    background-color: var(--color-cool-gray-subtle);
+    color: var(--color-cool-gray-dark);
+    border: 1px solid var(--color-cool-gray-light);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .badge-charcoal {
+    background-color: var(--color-charcoal);
+    color: #FFFFFF;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+  
+  .glass-effect {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+  }
+  
+  .mobile-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .mobile-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .mobile-grid {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+  
+  .mobile-button {
+    @apply w-full sm:w-auto px-4 py-3 sm:px-6 sm:py-3 text-sm sm:text-base;
+  }
+  
+  .mobile-card {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+  
+  .mobile-header {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+  }
+  
+  .mobile-subheader {
+    @apply text-lg sm:text-xl lg:text-2xl font-semibold;
+  }
+  
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .responsive-spacing {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+  
+  .responsive-gap {
+    @apply gap-4 sm:gap-6 lg:gap-8;
+  }
+}
+
+/* ==========================================================================
+   Admin & Utility Overrides to Electric Blue & Charcoal
+   ========================================================================== */
+.admin-scope .bg-purple-600,
+.admin-scope .bg-purple-700,
+.admin-scope .bg-blue-700,
+.admin-scope .bg-purple-500,
+.admin-scope .bg-blue-500,
+.admin-scope .bg-indigo-600,
+.admin-scope .bg-indigo-500,
+.admin-scope .from-purple-600,
+.admin-scope .from-blue-600,
+.admin-scope .from-purple-500,
+.admin-scope .from-blue-500,
+.admin-scope .to-blue-600,
+.admin-scope .to-purple-600,
+.admin-scope .to-purple-500,
+.admin-scope .to-blue-500,
+.admin-scope .via-purple-600,
+.admin-scope .via-blue-600 {
+  background-color: var(--color-electric-blue) !important;
+  background-image: linear-gradient(135deg, #3D7EFF, #2667F5) !important;
+  color: #FFFFFF !important;
+}
+
+.admin-scope .hover\:bg-purple-700:hover,
+.admin-scope .hover\:bg-blue-700:hover,
+.admin-scope .hover\:bg-purple-800:hover,
+.admin-scope .hover\:bg-blue-800:hover,
+.admin-scope .hover\:from-purple-700:hover,
+.admin-scope .hover\:to-blue-700:hover {
+  background-color: var(--color-electric-blue-hover) !important;
+  background-image: linear-gradient(135deg, #2667F5, #1750D0) !important;
+  color: #FFFFFF !important;
+}
+
+.admin-scope .text-purple-600,
+.admin-scope .text-blue-600,
+.admin-scope .text-purple-700,
+.admin-scope .text-blue-700,
+.admin-scope .text-purple-500,
+.admin-scope .text-blue-500,
+.admin-scope .text-purple-800,
+.admin-scope .text-blue-800,
+.admin-scope .text-purple-400,
+.admin-scope .text-blue-400,
+.admin-scope .text-purple-300,
+.admin-scope .text-blue-300,
+.admin-scope .text-indigo-600,
+.admin-scope .text-indigo-500 {
+  color: var(--color-electric-blue) !important;
+}
+
+.admin-scope .bg-purple-100,
+.admin-scope .bg-blue-100,
+.admin-scope .bg-purple-50,
+.admin-scope .bg-blue-50,
+.admin-scope .bg-purple-200,
+.admin-scope .bg-blue-200,
+.admin-scope .bg-indigo-100,
+.admin-scope .bg-indigo-50,
+.admin-scope .bg-purple-500\/10,
+.admin-scope .bg-blue-500\/10,
+.admin-scope .bg-purple-500\/20,
+.admin-scope .bg-blue-500\/20 {
+  background-color: var(--color-electric-blue-subtle) !important;
+  color: var(--color-electric-blue) !important;
+}
+
+.admin-scope .border-purple-600,
+.admin-scope .border-blue-600,
+.admin-scope .border-purple-500,
+.admin-scope .border-blue-500,
+.admin-scope .border-purple-200,
+.admin-scope .border-blue-200,
+.admin-scope .border-purple-300,
+.admin-scope .border-blue-300,
+.admin-scope .border-blue-500\/30,
+.admin-scope .border-purple-500\/30 {
+  border-color: var(--color-electric-blue-border) !important;
+}
+
+.admin-scope .focus\:ring-purple-500:focus,
+.admin-scope .focus\:ring-blue-500:focus,
+.admin-scope .focus\:ring-purple-600:focus,
+.admin-scope .focus\:ring-blue-600:focus,
+.admin-scope .focus\:border-purple-500:focus,
+.admin-scope .focus\:border-blue-500:focus {
+  --tw-ring-color: var(--color-electric-blue) !important;
+  border-color: var(--color-electric-blue) !important;
+}
+
+.admin-scope .accent-purple-600,
+.admin-scope .accent-blue-600 {
+  accent-color: var(--color-electric-blue) !important;
+}
