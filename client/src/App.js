@@ -15,7 +15,6 @@ import Referral from './pages/Referral';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import ContactUs from './pages/ContactUs';
-import WhitePaper from './pages/WhitePaper';
 import ArticleDetail from './pages/ArticleDetail';
 import ScamAlertsResourcePage from './pages/resources/ScamAlertsResourcePage';
 import RefundProgramsResourcePage from './pages/resources/RefundProgramsResourcePage';

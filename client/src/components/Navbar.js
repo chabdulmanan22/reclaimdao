@@ -9,7 +9,6 @@ import {
   Coins,
   Trophy,
   User,
-  Settings,
   LogOut,
   Shield,
   LogIn,
