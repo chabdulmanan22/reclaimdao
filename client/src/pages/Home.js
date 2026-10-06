@@ -570,78 +570,74 @@ const Home = () => {
           </div>
         </motion.div>
 
-        {/* Mobile Verified Claims Sticky Section */}
-        <div className="max-w-[390px] mx-auto">
-          {/* Minimalist Sticky Header right under Navbar */}
-          <div className="sticky top-20 z-40 bg-[#E8E8E3]/95 backdrop-blur-md py-3 px-1 mb-4 border-b border-[#D4D4CE] flex items-center justify-center text-center">
+        {/* Mobile Verified Claims Section (2 Cards per Row Responsive Grid) */}
+        <div className="w-full max-w-2xl mx-auto">
+          {/* Minimalist Section Header */}
+          <div className="flex items-center mb-3 px-1 text-xs text-charcoal font-medium">
             <span className="font-extrabold tracking-wider uppercase text-charcoal text-[11px] sm:text-xs">
               Verified Claims
             </span>
           </div>
 
-          {/* Stacking Cards Deck (1 Card visible at a time, each card stacks on top of previous on scroll) */}
-          <div className="relative w-full">
+          {/* Responsive 2-Cards per Row Grid (Vertically scrollable) */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 w-full">
             {ALL_CARDS.map((card, index) => (
-              <div
+              <motion.div
                 key={`mobile-card-${card.id}`}
-                className="sticky w-full"
-                style={{
-                  top: '122px', // below 80px navbar + 38px header + 4px gap
-                  zIndex: 10 + index,
-                  marginBottom: index === ALL_CARDS.length - 1 ? '32px' : '45vh',
-                }}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-20px' }}
+                transition={{ duration: 0.35, delay: (index % 2) * 0.06 }}
+                onClick={() => navigate(`/cases/${card.id}`)}
+                className="group relative overflow-hidden rounded-none border border-[#D4D4CE] h-[220px] sm:h-[260px] flex flex-col justify-end shadow-xs bg-[#1F1F23] cursor-pointer hover:border-charcoal transition-all duration-200"
+                style={{ borderRadius: '0px' }}
+                role="button"
+                tabIndex={0}
+                title={`Read Case #${card.id} - ${card.name}'s Story`}
               >
-                <div
-                  onClick={() => navigate(`/cases/${card.id}`)}
-                  className="group relative overflow-hidden rounded-none border border-[#D4D4CE] h-[430px] max-h-[58vh] flex flex-col justify-end shadow-[0_-8px_25px_rgba(0,0,0,0.22)] bg-[#1F1F23] cursor-pointer"
-                  style={{ borderRadius: '0px' }}
-                  role="button"
-                  tabIndex={0}
-                  title={`Read Case #${card.id} - ${card.name}'s Story`}
-                >
-                  {/* Full-bleed WebP Image (covers full card to borders) */}
-                  <img
-                    src={card.image}
-                    alt={card.name}
-                    className="absolute inset-0 w-full h-full object-cover object-center filter contrast-[1.03] brightness-[0.97] pointer-events-none"
-                    loading="lazy"
-                  />
+                {/* Full-bleed WebP Image */}
+                <img
+                  src={card.image}
+                  alt={card.name}
+                  className="absolute inset-0 w-full h-full object-cover object-center filter contrast-[1.03] brightness-[0.97] group-hover:scale-105 transition-transform duration-300 pointer-events-none"
+                  loading="lazy"
+                />
 
-                  {/* Smooth Bottom Gradient Overlay for High Text Contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent pointer-events-none" />
+                {/* Smooth Bottom Gradient Overlay for High Text Contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
 
-                  {/* Top Right Refunded Amount Badge */}
-                  <div className="absolute top-3.5 right-3.5 z-20 pointer-events-none">
-                    <div
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/95 backdrop-blur-sm border border-[#D4D4CE] text-charcoal font-mono text-xs font-bold tracking-tight shadow-sm"
-                      style={{ borderRadius: '0px' }}
-                    >
-                      <span className="w-1.5 h-1.5 bg-[#10B981] inline-block"></span>
-                      <span>{card.refundedAmount}</span>
-                    </div>
-                  </div>
-
-                  {/* Bottom Content: Bold Name, Thin Location, and Black Arrow in Right Bottom Corner */}
-                  <div className="relative z-10 p-4 sm:p-5 flex items-end justify-between gap-3 w-full">
-                    <div className="space-y-0.5 min-w-0 pr-2">
-                      <h3 className="font-bold text-white text-[16px] sm:text-lg leading-snug tracking-tight truncate drop-shadow-sm">
-                        {card.name}
-                      </h3>
-                      <p className="text-xs text-white/80 font-normal leading-normal tracking-normal drop-shadow-sm">
-                        {card.location}
-                      </p>
-                    </div>
-
-                    {/* Black Arrow in Right Bottom Corner */}
-                    <div
-                      className="w-8 h-8 rounded-none bg-white text-black flex items-center justify-center shadow-md flex-shrink-0 group-hover:bg-[#3D7EFF] group-hover:text-white transition-colors duration-200"
-                      style={{ borderRadius: '0px' }}
-                    >
-                      <ArrowUpRight className="w-4 h-4 text-black group-hover:text-white stroke-[2.2]" />
-                    </div>
+                {/* Top Right Refunded Amount Badge */}
+                <div className="absolute top-2 right-2 sm:top-2.5 sm:right-2.5 z-20 pointer-events-none">
+                  <div
+                    className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white/95 backdrop-blur-sm border border-[#D4D4CE] text-charcoal font-mono text-[9px] sm:text-[11px] font-bold tracking-tight shadow-xs"
+                    style={{ borderRadius: '0px' }}
+                  >
+                    <span className="w-1.5 h-1.5 bg-[#10B981] inline-block flex-shrink-0"></span>
+                    <span className="truncate">{card.refundedAmount}</span>
                   </div>
                 </div>
-              </div>
+
+                {/* Bottom Content: Bold Name, Thin Location, and Black Arrow in Right Bottom Corner */}
+                <div className="relative z-10 p-2.5 sm:p-3.5 flex items-end justify-between gap-1.5 w-full">
+                  <div className="space-y-0.5 min-w-0 pr-1 flex-1">
+                    <h3 className="font-bold text-white text-[12px] sm:text-[14px] leading-tight truncate drop-shadow-sm">
+                      {card.name}
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] text-white/80 font-normal leading-tight truncate drop-shadow-sm">
+                      {card.location}
+                    </p>
+                  </div>
+
+                  {/* Black Arrow in Right Bottom Corner */}
+                  <div
+                    className="w-6 h-6 sm:w-7 sm:h-7 rounded-none bg-white text-black flex items-center justify-center shadow-xs flex-shrink-0 group-hover:bg-[#3D7EFF] group-hover:text-white transition-colors duration-200"
+                    style={{ borderRadius: '0px' }}
+                    title="Read Full Story"
+                  >
+                    <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.2]" />
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
