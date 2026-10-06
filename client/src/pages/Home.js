@@ -436,10 +436,14 @@ const Home = () => {
                       {col.cards.map((card) => (
                         <div
                           key={card.id}
+                          onClick={() => navigate(`/cases/${card.id}`)}
                           className={`group relative overflow-hidden rounded-none border border-[#D4D4CE] ${
                             col.colIndex === 7 ? 'h-full min-h-[500px]' : 'h-[240px] sm:h-[250px]'
-                          } flex flex-col justify-end transition-all duration-300 hover:border-charcoal/50 shadow-sm`}
+                          } flex flex-col justify-end transition-all duration-300 hover:border-charcoal cursor-pointer shadow-sm`}
                           style={{ borderRadius: '0px' }}
+                          role="button"
+                          tabIndex={0}
+                          title={`Read Case #${card.id} - ${card.name}'s Story`}
                         >
                           {/* Full-bleed WebP Image (covers full card to borders) */}
                           <img
@@ -478,6 +482,7 @@ const Home = () => {
                             <div
                               className="w-8 h-8 rounded-none bg-white text-black flex items-center justify-center shadow-md flex-shrink-0 group-hover:bg-[#3D7EFF] group-hover:text-white transition-colors duration-200"
                               style={{ borderRadius: '0px' }}
+                              title="Read Full Story"
                             >
                               <ArrowUpRight className="w-4 h-4 text-black group-hover:text-white stroke-[2.2]" />
                             </div>
@@ -587,8 +592,12 @@ const Home = () => {
                 }}
               >
                 <div
-                  className="group relative overflow-hidden rounded-none border border-[#D4D4CE] h-[430px] max-h-[58vh] flex flex-col justify-end shadow-[0_-8px_25px_rgba(0,0,0,0.22)] bg-[#1F1F23]"
+                  onClick={() => navigate(`/cases/${card.id}`)}
+                  className="group relative overflow-hidden rounded-none border border-[#D4D4CE] h-[430px] max-h-[58vh] flex flex-col justify-end shadow-[0_-8px_25px_rgba(0,0,0,0.22)] bg-[#1F1F23] cursor-pointer"
                   style={{ borderRadius: '0px' }}
+                  role="button"
+                  tabIndex={0}
+                  title={`Read Case #${card.id} - ${card.name}'s Story`}
                 >
                   {/* Full-bleed WebP Image (covers full card to borders) */}
                   <img

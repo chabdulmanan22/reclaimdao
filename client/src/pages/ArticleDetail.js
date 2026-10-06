@@ -1,7 +1,7 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText } from 'lucide-react';
+import { ArrowLeft, FileText, Clock, ShieldCheck } from 'lucide-react';
 import axios from 'axios';
 
 const ArticleDetail = () => {
@@ -38,20 +38,9 @@ const ArticleDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full overflow-x-hidden bg-white">
-        <div className="w-full min-w-0 mobile-padding py-20">
-          <div className="mx-auto max-w-2xl min-w-0">
-            <div className="h-4 w-24 animate-pulse rounded bg-gray-100" />
-            <div className="mt-10 flex flex-col items-center text-center">
-              <div className="h-16 w-16 animate-pulse rounded-full bg-gray-100" />
-              <div className="mt-6 h-8 w-full max-w-md animate-pulse rounded bg-gray-100" />
-            </div>
-            <div className="mx-auto mt-12 max-w-2xl min-w-0 space-y-3">
-              <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
-              <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
-              <div className="h-4 w-[85%] animate-pulse rounded bg-gray-100" />
-            </div>
-          </div>
+      <div className="min-h-screen bg-[#F8F8F6] text-charcoal py-12 px-4 flex items-center justify-center">
+        <div className="font-mono text-xs uppercase tracking-wider text-coolgray font-bold animate-pulse">
+          Ingesting evidentiary article dossier...
         </div>
       </div>
     );
@@ -59,22 +48,29 @@ const ArticleDetail = () => {
 
   if (notFound || !article) {
     return (
-      <div className="min-h-screen w-full overflow-x-hidden bg-white">
-        <div className="w-full min-w-0 mobile-padding py-20">
-          <div className="mx-auto max-w-md min-w-0 rounded-xl border border-gray-200 bg-white px-8 py-12 text-center shadow-sm">
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[#3b82f6] to-[#38bdf8] text-white">
-              <FileText className="h-7 w-7" />
-            </div>
-            <h1 className="text-xl font-bold text-gray-900">Article not found</h1>
-            <p className="mt-2 text-gray-600">This article may have been removed or is not available.</p>
-            <Link
-              to="/"
-              className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[#3b82f6] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#38bdf8]"
-            >
-              <ArrowLeft size={18} />
-              Back to home
-            </Link>
+      <div className="min-h-screen bg-[#F8F8F6] text-charcoal py-12 px-4 flex items-center justify-center">
+        <div
+          className="max-w-md w-full bg-white border border-[#D4D4CE] p-8 sm:p-10 shadow-sm text-center space-y-4"
+          style={{ borderRadius: '0px' }}
+        >
+          <div
+            className="w-12 h-12 bg-[#F8F8F6] border border-[#D4D4CE] text-coolgray flex items-center justify-center mx-auto"
+            style={{ borderRadius: '0px' }}
+          >
+            <FileText className="w-6 h-6" />
           </div>
+          <h1 className="text-xl font-black text-charcoal tracking-tight">Article Dossier Not Found</h1>
+          <p className="text-xs text-coolgray leading-relaxed font-mono">
+            The requested restitution document has either been archived or has not yet completed peer-review verification.
+          </p>
+          <Link
+            to="/resources/refund-programs"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#3D7EFF] hover:bg-blue-600 text-white font-mono font-bold text-xs uppercase tracking-wider shadow-sm transition-all"
+            style={{ borderRadius: '0px' }}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Return to Refund Catalogs</span>
+          </Link>
         </div>
       </div>
     );
@@ -86,65 +82,93 @@ const ArticleDetail = () => {
     .filter(Boolean);
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-white">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="w-full max-w-7xl mx-auto min-w-0 px-8 md:px-12 lg:px-16 py-8 md:py-10">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-[#3b82f6]"
-          >
-            <ArrowLeft size={16} />
-            Back to home
-          </Link>
+    <div className="min-h-screen bg-[#F8F8F6] text-charcoal py-8 sm:py-12 md:py-16 selection:bg-[#3D7EFF] selection:text-white">
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
 
-          <div className="mx-auto mt-10 max-w-3xl min-w-0 text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-[#3b82f6] to-[#38bdf8] text-white shadow-sm">
-              <FileText size={32} className="text-white" strokeWidth={1.5} aria-hidden />
+        {/* Masthead Header Section */}
+        <div className="border-b border-[#D4D4CE] pb-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <Link
+              to="/resources/refund-programs"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#D4D4CE] text-charcoal hover:border-[#3D7EFF] text-xs font-mono font-bold uppercase transition-all shadow-sm"
+              style={{ borderRadius: '0px' }}
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Refund Catalogs</span>
+            </Link>
+
+            <span
+              className="px-2.5 py-0.5 bg-white border border-[#D4D4CE] font-mono text-[10px] text-coolgray font-bold uppercase tracking-wider"
+              style={{ borderRadius: '0px' }}
+            >
+              Restitution Docket
+            </span>
+          </div>
+
+          <div className="pt-2">
+            <div
+              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#D4D4CE] text-charcoal text-[11px] font-mono font-bold uppercase tracking-wider shadow-sm mb-3"
+              style={{ borderRadius: '0px' }}
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-[#3D7EFF]" />
+              <span>Verified Restitution Case Record</span>
             </div>
+
             <motion.h1
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="break-words text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-4xl md:leading-tight"
+              className="break-words text-2xl sm:text-3xl md:text-4xl font-black text-charcoal tracking-tight"
             >
               {article.title}
             </motion.h1>
           </div>
         </div>
-      </header>
 
-      <main className="w-full max-w-7xl mx-auto min-w-0 px-8 md:px-12 lg:px-16 py-10 md:py-14">
-        <article className="mx-auto max-w-2xl min-w-0">
+        {/* Main Article Container */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="bg-white border border-[#D4D4CE] p-6 sm:p-10 md:p-12 shadow-sm space-y-6"
+          style={{ borderRadius: '0px' }}
+        >
           {paragraphs.length === 0 ? (
-            <p className="text-gray-600">This article has no content yet.</p>
+            <p className="text-coolgray font-mono text-xs">This evidentiary document has no published text.</p>
           ) : (
-            <div className="space-y-6 md:space-y-7">
+            <div className="space-y-5">
               {paragraphs.map((paragraph, index) => (
-                <motion.p
+                <p
                   key={index}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.15) }}
-                  className="break-words text-lg leading-relaxed text-gray-600 md:text-xl whitespace-pre-line [overflow-wrap:anywhere]"
+                  className="text-sm sm:text-base leading-relaxed text-charcoal/90 font-normal whitespace-pre-line [overflow-wrap:anywhere]"
                 >
                   {paragraph}
-                </motion.p>
+                </p>
               ))}
             </div>
           )}
 
-          <div className="mt-12 border-t border-gray-100 pt-8">
+          {/* Document Footer Navigation */}
+          <div className="pt-8 border-t border-[#D4D4CE] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <Link
-              to="/"
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+              to="/resources/refund-programs"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-white border border-[#D4D4CE] hover:border-charcoal text-charcoal font-mono font-bold text-xs uppercase tracking-wider transition-all"
+              style={{ borderRadius: '0px' }}
             >
-              <ArrowLeft size={18} />
-              Back to home
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Programs</span>
+            </Link>
+
+            <Link
+              to="/join-notice"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#3D7EFF] hover:bg-blue-600 text-white font-mono font-bold text-xs uppercase tracking-wider shadow-sm transition-all"
+              style={{ borderRadius: '0px' }}
+            >
+              <span>Submit a Claim on this Case</span>
             </Link>
           </div>
-        </article>
-      </main>
+        </motion.div>
+
+      </div>
     </div>
   );
 };

@@ -16,6 +16,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import ContactUs from './pages/ContactUs';
 import ArticleDetail from './pages/ArticleDetail';
+import CaseStoryDetail from './pages/CaseStoryDetail';
 import ScamAlertsResourcePage from './pages/resources/ScamAlertsResourcePage';
 import RefundProgramsResourcePage from './pages/resources/RefundProgramsResourcePage';
 import HowRefundsResourcePage from './pages/resources/HowRefundsResourcePage';
@@ -195,6 +196,14 @@ function App() {
                     element={
                       <Layout>
                         <ArticleDetail />
+                      </Layout>
+                    }
+                  />
+                  <Route
+                    path="/cases/:id"
+                    element={
+                      <Layout>
+                        <CaseStoryDetail />
                       </Layout>
                     }
                   />

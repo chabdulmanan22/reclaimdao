@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Shield, Lock, ArrowRight } from 'lucide-react';
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -25,34 +25,61 @@ const ResetPassword = () => {
     if (formData.password !== formData.passwordConfirm) {
       return toast.error('Passwords do not match');
     }
+    if (formData.password.length < 8) {
+      return toast.error('Password must be at least 8 characters');
+    }
     setLoading(true);
     try {
       const res = await axios.post(`/api/password/reset/${token}`, {
         password: formData.password,
         passwordConfirm: formData.passwordConfirm,
       });
-      toast.success(res.data.message);
+      toast.success(res.data.message || 'Password reset successfully');
       navigate('/login');
     } catch (error) {
-      toast.error(error.response.data.message || 'An error occurred');
+      toast.error(error.response?.data?.message || 'Password reset failed');
     }
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+    <div className="min-h-screen bg-[#F8F8F6] text-charcoal flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 selection:bg-[#3D7EFF] selection:text-white">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative max-w-md w-full space-y-8"
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="relative max-w-md w-full"
       >
-        <div className="bg-[#0a254d] text-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-sky-400/25">
-          <h2 className="text-3xl font-black text-white mb-6 text-center tracking-tight">Reset <span className="text-[#A85830]">Password</span></h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div
+          className="bg-white text-charcoal border border-[#D4D4CE] p-8 sm:p-10 shadow-sm"
+          style={{ borderRadius: '0px' }}
+        >
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-1.5 mb-2 text-coolgray font-mono text-[11px] font-bold uppercase tracking-widest">
+              <Shield className="w-3.5 h-3.5 text-[#3D7EFF]" />
+              <span>Decentralized Restitution Protocol</span>
+            </div>
+            <h1 className="text-3xl font-black text-charcoal tracking-tight leading-tight mb-2">
+              Reset Password
+            </h1>
+            <p className="text-xs sm:text-sm text-coolgray font-normal">
+              Enter and confirm your updated secure credentials
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">New Password</label>
+              <label
+                htmlFor="password"
+                className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5"
+              >
+                New Password <span className="text-[#3D7EFF]">*</span>
+              </label>
               <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                  <Lock className="h-4 w-4" />
+                </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -60,17 +87,32 @@ const ResetPassword = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm"
-                  placeholder="Enter new password"
+                  className="w-full pl-10 pr-10 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors"
+                  placeholder="Minimum 8 characters"
+                  style={{ borderRadius: '0px' }}
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                  {showPassword ? <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-200" /> : <Eye className="h-5 w-5 text-slate-400 hover:text-slate-200" />}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-coolgray hover:text-charcoal cursor-pointer"
+                  style={{ borderRadius: '0px' }}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
+
             <div>
-              <label htmlFor="passwordConfirm" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">Confirm New Password</label>
+              <label
+                htmlFor="passwordConfirm"
+                className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5"
+              >
+                Confirm New Password <span className="text-[#3D7EFF]">*</span>
+              </label>
               <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                  <Lock className="h-4 w-4" />
+                </div>
                 <input
                   type={showConfirm ? 'text' : 'password'}
                   name="passwordConfirm"
@@ -78,26 +120,53 @@ const ResetPassword = () => {
                   value={formData.passwordConfirm}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm"
-                  placeholder="Confirm new password"
+                  className="w-full pl-10 pr-10 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors"
+                  placeholder="Re-enter new password"
+                  style={{ borderRadius: '0px' }}
                 />
-                <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                  {showConfirm ? <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-200" /> : <Eye className="h-5 w-5 text-slate-400 hover:text-slate-200" />}
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-coolgray hover:text-charcoal cursor-pointer"
+                  style={{ borderRadius: '0px' }}
+                >
+                  {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
+
             <button
               type="submit"
-              disabled={loading}
-              className="w-full py-4 px-6 rounded-xl font-black text-white shadow-xl transition-all text-base disabled:opacity-50 cursor-pointer hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)',
-                boxShadow: '0 8px 30px rgba(168, 88, 48, 0.45)'
-              }}
+              disabled={loading || !formData.password || !formData.passwordConfirm}
+              className={`w-full py-4 px-6 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                formData.password && formData.passwordConfirm && !loading
+                  ? 'bg-[#3D7EFF] hover:bg-electric-600 text-white cursor-pointer shadow-sm'
+                  : 'bg-gray-200 text-gray-400 border border-gray-200 cursor-not-allowed'
+              }`}
+              style={{ borderRadius: '0px' }}
             >
-              {loading ? 'Resetting...' : 'Reset Password'}
+              {loading ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Updating Password...</span>
+                </div>
+              ) : (
+                <>
+                  <span>Reset Password</span>
+                  <ArrowRight className="w-4 h-4 stroke-[2.2]" />
+                </>
+              )}
             </button>
           </form>
+
+          <div className="mt-6 pt-6 border-t border-[#D4D4CE] text-center">
+            <Link
+              to="/login"
+              className="text-xs font-mono font-bold uppercase tracking-wider text-[#3D7EFF] hover:underline"
+            >
+              Back to Login
+            </Link>
+          </div>
         </div>
       </motion.div>
     </div>

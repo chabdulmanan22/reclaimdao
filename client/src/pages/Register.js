@@ -9,9 +9,11 @@ import {
   Lock,
   User,
   CheckCircle,
-  X
+  X,
+  Shield,
+  ArrowRight,
+  Check
 } from 'lucide-react';
-
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -83,25 +85,21 @@ const Register = () => {
   const passwordValidation = validatePassword(formData.password);
   const passwordsMatch = formData.password === formData.confirmPassword;
 
+  const isFormValid =
+    acceptTerms &&
+    passwordsMatch &&
+    formData.firstName?.trim() &&
+    formData.lastName?.trim().length >= 2 &&
+    passwordValidation.minLength &&
+    passwordValidation.hasNumber &&
+    passwordValidation.hasUpper &&
+    passwordValidation.hasLower &&
+    passwordValidation.hasSpecial;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!acceptTerms) {
-      return;
-    }
-
-    if (!passwordsMatch) {
-      return;
-    }
-
-    if (
-      !passwordValidation.minLength ||
-      !passwordValidation.hasNumber ||
-      !passwordValidation.hasUpper ||
-      !passwordValidation.hasLower ||
-      !passwordValidation.hasSpecial ||
-      (formData.lastName?.trim().length < 2)
-    ) {
+    if (!isFormValid) {
       return;
     }
 
@@ -126,31 +124,56 @@ const Register = () => {
     setLoading(false);
   };
 
+  // Registration Success / Verification View
   if (registrationSuccess) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-[#F8F8F6] text-charcoal flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 selection:bg-[#3D7EFF] selection:text-white">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative max-w-lg w-full bg-[#0a254d] text-white border border-sky-400/25 p-8 rounded-3xl shadow-2xl text-center"
+          className="relative max-w-lg w-full bg-white text-charcoal border border-[#D4D4CE] p-8 sm:p-12 shadow-sm text-center"
+          style={{ borderRadius: '0px' }}
         >
           <div className="mb-6 flex justify-center">
-            <div className="p-4 bg-[#A85830]/15 text-[#A85830] rounded-2xl border border-[#A85830]/30">
-              <Mail className="h-12 w-12" />
+            <div
+              className="w-16 h-16 bg-[#3D7EFF] text-white flex items-center justify-center shadow-sm"
+              style={{ borderRadius: '0px' }}
+            >
+              <Mail className="h-8 w-8" />
             </div>
           </div>
-          <h2 className="text-3xl font-black text-white mb-4">Verify Your <span className="text-[#A85830]">Email</span></h2>
-          <p className="text-base text-slate-300 mb-6 leading-relaxed">
-            We've sent a verification link to <span className="font-semibold text-white">{formData.email}</span>. Please click the link in the email to activate your account.
+
+          <div
+            className="inline-flex items-center gap-1.5 px-3 py-1 bg-charcoal text-white font-mono text-xs font-bold mb-3 uppercase tracking-wider"
+            style={{ borderRadius: '0px' }}
+          >
+            <span>Verification Required</span>
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-black text-charcoal mb-3 tracking-tight">
+            Verify Your Email
+          </h2>
+
+          <p className="text-sm text-coolgray mb-6 leading-relaxed">
+            We have transmitted a secure verification token to <strong className="font-bold text-charcoal">{formData.email}</strong>. Please follow the link in your email to activate your account and access case telemetry.
           </p>
-          <div className="bg-[#061833] border border-sky-400/20 rounded-2xl p-4 mb-8">
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Can't find the email? Please check your spam folder and mark it as <span className="font-bold text-[#A85830]">Not Spam</span> to avoid missing important updates.
+
+          <div
+            className="bg-[#F8F8F6] border border-[#D4D4CE] p-4 mb-8 text-left text-xs font-mono text-coolgray"
+            style={{ borderRadius: '0px' }}
+          >
+            <p className="leading-relaxed">
+              If the message is not visible in your inbox within two minutes, inspect your spam or junk folder and mark it as <strong className="text-charcoal font-bold">Not Spam</strong>.
             </p>
           </div>
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <Link to="/login" className="text-[#A85830] hover:text-[#964d28] font-bold transition-colors">
-              Return to Login
+
+          <div className="pt-4 border-t border-[#D4D4CE]">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#3D7EFF] hover:underline"
+            >
+              <span>Return to Login</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </motion.div>
@@ -159,28 +182,44 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F8F6] text-charcoal flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 selection:bg-[#3D7EFF] selection:text-white">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative max-w-lg w-full space-y-6"
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="relative max-w-lg w-full"
       >
-        <div className="bg-[#0a254d] text-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-sky-400/25">
+        <div
+          className="bg-white text-charcoal border border-[#D4D4CE] p-8 sm:p-10 shadow-sm"
+          style={{ borderRadius: '0px' }}
+        >
+          {/* Header */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-black text-white mb-2 tracking-tight">Sign <span className="text-[#A85830]">up</span></h2>
-            <p className="text-slate-300 text-sm font-medium">Create your ReclaimDAO account</p>
+            <div className="inline-flex items-center gap-1.5 mb-2 text-coolgray font-mono text-[11px] font-bold uppercase tracking-widest">
+              <Shield className="w-3.5 h-3.5 text-[#3D7EFF]" />
+              <span>Decentralized Restitution Protocol</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black text-charcoal tracking-tight leading-tight mb-2">
+              Sign Up
+            </h1>
+            <p className="text-xs sm:text-sm text-coolgray font-normal">
+              Create your ReclaimDAO restitution tracking account
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
+            {/* First & Last Name */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">
-                  First name*
+                <label
+                  htmlFor="firstName"
+                  className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5"
+                >
+                  First name <span className="text-[#3D7EFF]">*</span>
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-sky-400" />
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                    <User className="h-4 w-4" />
                   </div>
                   <input
                     id="firstName"
@@ -189,19 +228,25 @@ const Register = () => {
                     required
                     value={formData.firstName}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-3 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm ${isAutoFilled ? 'cursor-not-allowed opacity-90' : ''} ${serverErrors.some(e => e.path === 'firstName') ? 'border-red-500' : ''}`}
+                    className={`w-full pl-10 pr-3.5 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors ${
+                      isAutoFilled ? 'bg-[#F8F8F6] cursor-not-allowed opacity-90' : ''
+                    } ${serverErrors.some(e => e.path === 'firstName') ? 'border-red-500' : ''}`}
                     placeholder="First name"
                     readOnly={isAutoFilled}
+                    style={{ borderRadius: '0px' }}
                   />
-                  {serverErrors.filter(e => e.path === 'firstName').map((e, i) => (
-                    <p key={i} className="mt-1 text-xs text-red-400">{e.msg || e.message}</p>
-                  ))}
                 </div>
+                {serverErrors.filter(e => e.path === 'firstName').map((e, i) => (
+                  <p key={i} className="mt-1 text-xs text-red-500 font-medium">{e.msg || e.message}</p>
+                ))}
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">
-                  Last name*
+                <label
+                  htmlFor="lastName"
+                  className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5"
+                >
+                  Last name <span className="text-[#3D7EFF]">*</span>
                 </label>
                 <input
                   id="lastName"
@@ -210,26 +255,35 @@ const Register = () => {
                   required
                   value={formData.lastName}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm ${isAutoFilled ? 'cursor-not-allowed opacity-90' : ''} ${formData.lastName && formData.lastName.trim().length < 2 ? 'border-red-500' : ''} ${serverErrors.some(e => e.path === 'lastName') ? 'border-red-500' : ''}`}
+                  className={`w-full px-3.5 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors ${
+                    isAutoFilled ? 'bg-[#F8F8F6] cursor-not-allowed opacity-90' : ''
+                  } ${formData.lastName && formData.lastName.trim().length < 2 ? 'border-red-500' : ''} ${
+                    serverErrors.some(e => e.path === 'lastName') ? 'border-red-500' : ''
+                  }`}
                   placeholder="Last name"
                   readOnly={isAutoFilled}
+                  style={{ borderRadius: '0px' }}
                 />
                 {formData.lastName && formData.lastName.trim().length < 2 && (
-                  <p className="mt-1 text-xs text-red-400">Last name must be at least 2 characters</p>
+                  <p className="mt-1 text-xs text-red-500 font-medium">Last name must be at least 2 characters</p>
                 )}
                 {serverErrors.filter(e => e.path === 'lastName').map((e, i) => (
-                  <p key={i} className="mt-1 text-xs text-red-400">{e.msg || e.message}</p>
+                  <p key={i} className="mt-1 text-xs text-red-500 font-medium">{e.msg || e.message}</p>
                 ))}
               </div>
             </div>
 
+            {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">
-                Email*
+              <label
+                htmlFor="email"
+                className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5"
+              >
+                Email address <span className="text-[#3D7EFF]">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-sky-400" />
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                  <Mail className="h-4 w-4" />
                 </div>
                 <input
                   id="email"
@@ -238,26 +292,35 @@ const Register = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm ${emailLocked ? 'cursor-not-allowed opacity-90' : ''}`}
+                  className={`w-full pl-10 pr-4 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors ${
+                    emailLocked ? 'bg-[#F8F8F6] cursor-not-allowed text-charcoal/80' : ''
+                  }`}
                   readOnly={emailLocked}
-                  placeholder="Enter your email"
+                  placeholder="claimant@example.com"
+                  style={{ borderRadius: '0px' }}
                 />
-                {emailLocked && (
-                  <p className="mt-1 text-xs text-slate-300">Email locked from your application invitation</p>
-                )}
-                {serverErrors.filter(e => e.path === 'email').map((e, i) => (
-                  <p key={i} className="mt-1 text-xs text-red-400">{e.msg || e.message}</p>
-                ))}
               </div>
+              {emailLocked && (
+                <p className="mt-1.5 text-xs text-coolgray font-mono">
+                  Email locked from your verified restitution claim submission
+                </p>
+              )}
+              {serverErrors.filter(e => e.path === 'email').map((e, i) => (
+                <p key={i} className="mt-1 text-xs text-red-500 font-medium">{e.msg || e.message}</p>
+              ))}
             </div>
 
+            {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">
-                Password*
+              <label
+                htmlFor="password"
+                className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5"
+              >
+                Password <span className="text-[#3D7EFF]">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-sky-400" />
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                  <Lock className="h-4 w-4" />
                 </div>
                 <input
                   id="password"
@@ -266,56 +329,74 @@ const Register = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-10 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm ${serverErrors.some(e => e.path === 'password') ? 'border-red-500' : ''}`}
-                  placeholder="Create a password"
+                  className={`w-full pl-10 pr-10 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors ${
+                    serverErrors.some(e => e.path === 'password') ? 'border-red-500' : ''
+                  }`}
+                  placeholder="Create a strong password"
+                  style={{ borderRadius: '0px' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-coolgray hover:text-charcoal cursor-pointer"
+                  style={{ borderRadius: '0px' }}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-200" />
+                    <EyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="h-5 w-5 text-slate-400 hover:text-slate-200" />
+                    <Eye className="h-4 w-4" />
                   )}
                 </button>
               </div>
 
-              {/* Password Requirements */}
+              {/* Password Requirements Checklist */}
               {formData.password && (
-                <div className="mt-2 space-y-1">
-                  <div className={`flex items-center space-x-2 text-xs ${passwordValidation.minLength ? 'text-green-400' : 'text-slate-400'}`}>
-                    {passwordValidation.minLength ? <CheckCircle size={14} /> : <X size={14} />}
+                <div className="mt-2.5 p-3 bg-[#F8F8F6] border border-[#D4D4CE] space-y-1 text-xs font-mono" style={{ borderRadius: '0px' }}>
+                  <div className={`flex items-center space-x-2 ${passwordValidation.minLength ? 'text-charcoal font-semibold' : 'text-coolgray'}`}>
+                    <span className={`w-3.5 h-3.5 flex items-center justify-center ${passwordValidation.minLength ? 'text-[#10B981]' : 'text-coolgray'}`}>
+                      {passwordValidation.minLength ? '✓' : '•'}
+                    </span>
                     <span>At least 8 characters</span>
                   </div>
-                  <div className={`flex items-center space-x-2 text-xs ${passwordValidation.hasNumber ? 'text-green-400' : 'text-slate-400'}`}>
-                    {passwordValidation.hasNumber ? <CheckCircle size={14} /> : <X size={14} />}
+                  <div className={`flex items-center space-x-2 ${passwordValidation.hasNumber ? 'text-charcoal font-semibold' : 'text-coolgray'}`}>
+                    <span className={`w-3.5 h-3.5 flex items-center justify-center ${passwordValidation.hasNumber ? 'text-[#10B981]' : 'text-coolgray'}`}>
+                      {passwordValidation.hasNumber ? '✓' : '•'}
+                    </span>
                     <span>Contains a number</span>
                   </div>
-                  <div className={`flex items-center space-x-2 text-xs ${passwordValidation.hasUpper ? 'text-green-400' : 'text-slate-400'}`}>
-                    {passwordValidation.hasUpper ? <CheckCircle size={14} /> : <X size={14} />}
+                  <div className={`flex items-center space-x-2 ${passwordValidation.hasUpper ? 'text-charcoal font-semibold' : 'text-coolgray'}`}>
+                    <span className={`w-3.5 h-3.5 flex items-center justify-center ${passwordValidation.hasUpper ? 'text-[#10B981]' : 'text-coolgray'}`}>
+                      {passwordValidation.hasUpper ? '✓' : '•'}
+                    </span>
                     <span>Contains an uppercase letter</span>
                   </div>
-                  <div className={`flex items-center space-x-2 text-xs ${passwordValidation.hasLower ? 'text-green-400' : 'text-slate-400'}`}>
-                    {passwordValidation.hasLower ? <CheckCircle size={14} /> : <X size={14} />}
+                  <div className={`flex items-center space-x-2 ${passwordValidation.hasLower ? 'text-charcoal font-semibold' : 'text-coolgray'}`}>
+                    <span className={`w-3.5 h-3.5 flex items-center justify-center ${passwordValidation.hasLower ? 'text-[#10B981]' : 'text-coolgray'}`}>
+                      {passwordValidation.hasLower ? '✓' : '•'}
+                    </span>
                     <span>Contains a lowercase letter</span>
                   </div>
-                  <div className={`flex items-center space-x-2 text-xs ${passwordValidation.hasSpecial ? 'text-green-400' : 'text-slate-400'}`}>
-                    {passwordValidation.hasSpecial ? <CheckCircle size={14} /> : <X size={14} />}
+                  <div className={`flex items-center space-x-2 ${passwordValidation.hasSpecial ? 'text-charcoal font-semibold' : 'text-coolgray'}`}>
+                    <span className={`w-3.5 h-3.5 flex items-center justify-center ${passwordValidation.hasSpecial ? 'text-[#10B981]' : 'text-coolgray'}`}>
+                      {passwordValidation.hasSpecial ? '✓' : '•'}
+                    </span>
                     <span>Contains a special character (@$!%*?&)</span>
                   </div>
                 </div>
               )}
             </div>
 
+            {/* Password Confirmation */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">
-                Password confirmation*
+              <label
+                htmlFor="confirmPassword"
+                className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5"
+              >
+                Password confirmation <span className="text-[#3D7EFF]">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-sky-400" />
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                  <Lock className="h-4 w-4" />
                 </div>
                 <input
                   id="confirmPassword"
@@ -324,93 +405,98 @@ const Register = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`w-full pl-10 pr-10 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm ${formData.confirmPassword && !passwordsMatch ? 'border-red-500' : ''
-                    } ${serverErrors.some(e => e.path === 'confirmPassword') ? 'border-red-500' : ''}`}
+                  className={`w-full pl-10 pr-10 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors ${
+                    formData.confirmPassword && !passwordsMatch ? 'border-red-500' : ''
+                  } ${serverErrors.some(e => e.path === 'confirmPassword') ? 'border-red-500' : ''}`}
                   placeholder="Confirm your password"
+                  style={{ borderRadius: '0px' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-coolgray hover:text-charcoal cursor-pointer"
+                  style={{ borderRadius: '0px' }}
                 >
                   {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-200" />
+                    <EyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="h-5 w-5 text-slate-400 hover:text-slate-200" />
+                    <Eye className="h-4 w-4" />
                   )}
                 </button>
               </div>
               {formData.confirmPassword && !passwordsMatch && (
-                <p className="mt-1 text-xs text-red-400">Passwords do not match</p>
+                <p className="mt-1 text-xs text-red-500 font-medium">Passwords do not match</p>
               )}
             </div>
 
-            <div className="flex items-center">
-              <input
-                id="accept-terms"
-                name="accept-terms"
-                type="checkbox"
-                checked={acceptTerms}
-                onChange={(e) => setAcceptTerms(e.target.checked)}
-                className="h-4 w-4 text-[#A85830] focus:ring-[#A85830] border-slate-700 bg-[#061833] rounded"
-              />
-              <label htmlFor="accept-terms" className="ml-2 block text-xs text-slate-300">
-                I accept the{' '}
-                <Link to="/privacy" className="text-sky-400 hover:text-sky-300">
-                  Privacy Policy
-                </Link>{' '}
-                and{' '}
-                <Link to="/terms" className="text-sky-400 hover:text-sky-300">
-                  Terms of Service
-                </Link>
-                *
+            {/* Terms and Privacy Checkbox */}
+            <div className="pt-1">
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  id="accept-terms"
+                  name="accept-terms"
+                  type="checkbox"
+                  checked={acceptTerms}
+                  onChange={(e) => setAcceptTerms(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 accent-[#3D7EFF] border-[#D4D4CE] rounded-none cursor-pointer"
+                  style={{ borderRadius: '0px' }}
+                />
+                <span className="text-xs text-coolgray leading-normal select-none">
+                  I accept the{' '}
+                  <Link to="/privacy" className="text-[#3D7EFF] font-semibold hover:underline">
+                    Privacy Policy
+                  </Link>{' '}
+                  and{' '}
+                  <Link to="/terms" className="text-[#3D7EFF] font-semibold hover:underline">
+                    Terms of Service
+                  </Link>
+                  *
+                </span>
               </label>
               {!acceptTerms && (
-                <p className="ml-2 text-sm text-red-400">You must accept the terms to continue</p>
+                <p className="mt-1 pl-6 text-xs text-red-500 font-medium">
+                  You must accept the terms to continue
+                </p>
               )}
               {serverErrors.filter(e => e.path === 'acceptTerms').map((e, i) => (
-                <p key={i} className="ml-2 text-sm text-red-400">{e.msg || e.message}</p>
+                <p key={i} className="mt-1 pl-6 text-xs text-red-500 font-medium">{e.msg || e.message}</p>
               ))}
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
-              disabled={
-                loading ||
-                !acceptTerms ||
-                !passwordsMatch ||
-                !passwordValidation.minLength ||
-                !passwordValidation.hasNumber ||
-                !passwordValidation.hasUpper ||
-                !passwordValidation.hasLower ||
-                !passwordValidation.hasSpecial ||
-                (formData.lastName?.trim().length < 2)
-              }
-              className="w-full py-4 px-6 rounded-xl font-black text-white shadow-xl transition-all text-base disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)',
-                boxShadow: '0 8px 30px rgba(168, 88, 48, 0.45)'
-              }}
+              disabled={loading || !isFormValid}
+              className={`w-full py-4 px-6 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                isFormValid && !loading
+                  ? 'bg-[#3D7EFF] hover:bg-electric-600 text-white cursor-pointer shadow-sm'
+                  : 'bg-gray-200 text-gray-400 border border-gray-200 cursor-not-allowed'
+              }`}
+              style={{ borderRadius: '0px' }}
             >
               {loading ? (
                 <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  <span>Creating account...</span>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Creating Account...</span>
                 </div>
               ) : (
-                'Sign up'
+                <>
+                  <span>Sign Up</span>
+                  <ArrowRight className="w-4 h-4 stroke-[2.2]" />
+                </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-slate-300 text-sm font-medium">
+          {/* Footer Link */}
+          <div className="mt-6 pt-6 border-t border-[#D4D4CE] text-center">
+            <p className="text-coolgray text-xs">
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="font-bold text-[#A85830] hover:text-[#964d28] transition-colors"
+                className="font-bold text-[#3D7EFF] hover:underline transition-colors ml-1"
               >
-                Log in
+                Log In
               </Link>
             </p>
           </div>

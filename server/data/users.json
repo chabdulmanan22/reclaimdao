@@ -1,5 +1,35 @@
 [
   {
+    "_id": "usr_demo_1791264000000",
+    "firstName": "Reclaim",
+    "lastName": "Victim",
+    "email": "demo@reclaimdao.org",
+    "password": "$2a$10$zt7hcuTOp3JZ/LGG1selZe1W5OxNuvIU3qAOSuGG3vjOBRJmSB8um",
+    "role": "user",
+    "isActive": true,
+    "isEmailVerified": true,
+    "referralCode": "rec786demo",
+    "points": 1250,
+    "votingRights": 8,
+    "verifiedLoss": 48500,
+    "unverifiedLoss": 12000,
+    "amountRestituted": 36500,
+    "rank": 4,
+    "stats": {
+      "votingPoints": 450,
+      "contributionPoints": 500,
+      "referralPoints": 300,
+      "referralCount": 3,
+      "totalVotes": 6,
+      "totalContributions": 2,
+      "contributionAmount": 1500
+    },
+    "overrides": {
+      "rankOverride": 4
+    },
+    "createdAt": "2026-10-06T04:58:56.242Z"
+  },
+  {
     "_id": "usr_1788543754553_917",
     "firstName": "Daniel",
     "lastName": "Daniel",

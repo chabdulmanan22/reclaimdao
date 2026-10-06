@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LIVE_RECOVERIES_DATA } from '../data/liveRecoveriesData';
-import { X } from 'lucide-react';
+import { X, ArrowUpRight } from 'lucide-react';
 
 const LiveRecoveryNotification = () => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
@@ -51,7 +53,7 @@ const LiveRecoveryNotification = () => {
 
   return (
     <div
-      className="fixed bottom-5 left-4 sm:left-6 z-50 pointer-events-none select-none"
+      className="fixed bottom-4 sm:bottom-5 left-3 sm:left-6 right-3 sm:right-auto z-50 pointer-events-none select-none max-w-[calc(100vw-1.5rem)] sm:max-w-[420px]"
       onMouseEnter={() => {
         isHoveredRef.current = true;
       }}
@@ -70,10 +72,15 @@ const LiveRecoveryNotification = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.96 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="pointer-events-auto flex items-center gap-3.5 p-3 sm:p-3.5 bg-white/95 hover:bg-white text-charcoal shadow-[0_8px_30px_rgba(47,47,52,0.12)] border border-[#D4D4CE] hover:border-charcoal backdrop-blur-md transition-all duration-200 max-w-[92vw] sm:max-w-[420px] rounded-none group"
+            onClick={(e) => {
+              if (e.target.closest('button')) return;
+              navigate(`/cases/${current.id}`);
+            }}
+            className="pointer-events-auto flex items-center gap-3 sm:gap-3.5 p-3 sm:p-3.5 bg-white/98 hover:bg-white text-charcoal shadow-[0_8px_30px_rgba(47,47,52,0.12)] border border-[#D4D4CE] hover:border-charcoal backdrop-blur-md transition-all duration-200 w-full sm:w-auto sm:max-w-[420px] rounded-none group cursor-pointer"
             style={{ borderRadius: '0px' }}
+            title={`Read ${current.name}'s Story`}
           >
-            {/* Square Portrait Photo (Choras Shape with Sharp 0px Corners) */}
+            {/* Square Portrait Photo (Sharp 0px Corners) */}
             <div className="relative shrink-0">
               <img
                 src={current.image}
@@ -88,7 +95,7 @@ const LiveRecoveryNotification = () => {
               />
             </div>
 
-            {/* Notification Text with Primary Brand Typography */}
+            {/* Notification Text */}
             <div className="flex-1 min-w-0 pr-1 text-left">
               <p className="text-[12px] sm:text-[13px] text-charcoal leading-snug">
                 <strong className="font-bold text-charcoal">{current.name}</strong>
@@ -100,26 +107,31 @@ const LiveRecoveryNotification = () => {
                 </strong>
               </p>
 
-              {/* Micro Status Badges Row */}
-              <div className="flex items-center gap-2 mt-1">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider font-bold text-charcoal">
-                  <span
-                    className="w-1.5 h-1.5 bg-[#10B981] inline-block"
-                    style={{ borderRadius: '0px' }}
-                  />
-                  <span>{current.status || 'Verified Restitution'}</span>
-                </span>
-                <span className="text-[#D4D4CE]">•</span>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-coolgray font-semibold">
-                  CASE #{current.id}
-                </span>
+              {/* Responsive Read Story Action Button */}
+              <div className="mt-2 flex items-center">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/cases/${current.id}`);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#F8F8F6] group-hover:bg-[#3D7EFF] text-[#3D7EFF] group-hover:text-white border border-[#D4D4CE] group-hover:border-[#3D7EFF] text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider transition-all duration-150 cursor-pointer shadow-2xs"
+                  style={{ borderRadius: '0px' }}
+                >
+                  <span>Read Story</span>
+                  <ArrowUpRight className="w-3 h-3 stroke-[2.5]" />
+                </button>
               </div>
             </div>
 
             {/* Close Button: Strict Sharp 0px Square */}
             <button
-              onClick={() => setIsDismissed(true)}
-              className="shrink-0 w-6 h-6 rounded-none border border-transparent hover:border-[#D4D4CE] flex items-center justify-center text-coolgray hover:text-charcoal hover:bg-[#F4F4F0] transition-colors cursor-pointer"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDismissed(true);
+              }}
+              className="shrink-0 w-6 h-6 rounded-none border border-transparent hover:border-[#D4D4CE] flex items-center justify-center text-coolgray hover:text-charcoal hover:bg-[#F4F4F0] transition-colors cursor-pointer self-start sm:self-center"
               style={{ borderRadius: '0px' }}
               title="Dismiss"
               aria-label="Close notification"

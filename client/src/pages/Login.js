@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Shield, ArrowRight, KeyRound, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -33,6 +33,7 @@ const Login = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+    setServerErrors([]);
   };
 
   const handleSubmit = async (e) => {
@@ -52,19 +53,15 @@ const Login = () => {
     setLoading(false);
   };
 
-  const handleForgotPassword = () => {
-    setShowForgot(true);
-  };
-
   const sendOtp = async () => {
     if (!formData.email) {
-      toast.error('Enter your email first');
+      toast.error('Enter your email address first');
       return;
     }
     setSendingOtp(true);
     try {
       await axios.post('/api/password/forgot-otp', { email: formData.email });
-      toast.success('OTP sent to your email');
+      toast.success('Security OTP transmitted to your email');
     } catch (e) {
       const msg = e.response?.data?.message || 'Failed to send OTP';
       toast.error(msg);
@@ -75,15 +72,15 @@ const Login = () => {
 
   const changePasswordWithOtp = async () => {
     if (!formData.email) {
-      toast.error('Enter your email');
+      toast.error('Enter your email address');
       return;
     }
     if (!otpCode) {
-      toast.error('Enter the OTP');
+      toast.error('Enter the OTP received');
       return;
     }
     if (!newPass || newPass.length < 8) {
-      toast.error('Password must be at least 8 characters');
+      toast.error('New password must be at least 8 characters');
       return;
     }
     if (newPass !== confirmPass) {
@@ -93,13 +90,13 @@ const Login = () => {
     setChangingPwd(true);
     try {
       await axios.post('/api/password/reset-otp', { email: formData.email, otp: otpCode, newPassword: newPass });
-      toast.success('Password changed. You can log in now');
+      toast.success('Password updated successfully. You may now log in.');
       setShowForgot(false);
       setOtpCode('');
       setNewPass('');
       setConfirmPass('');
     } catch (e) {
-      const msg = e.response?.data?.message || 'Failed to change password';
+      const msg = e.response?.data?.message || 'Failed to reset password';
       toast.error(msg);
     } finally {
       setChangingPwd(false);
@@ -107,210 +104,283 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F8F6] text-charcoal flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 selection:bg-[#3D7EFF] selection:text-white">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative max-w-lg w-full space-y-6"
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="relative max-w-lg w-full"
       >
-        <div className="bg-[#0a254d] text-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-sky-400/25">
+        <div
+          className="bg-white text-charcoal border border-[#D4D4CE] p-8 sm:p-10 shadow-sm"
+          style={{ borderRadius: '0px' }}
+        >
+          {/* Header */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-black text-white mb-2 tracking-tight">Log <span className="text-[#A85830]">in</span></h2>
-            <p className="text-slate-300 text-sm font-medium">Welcome back to ReclaimDAO</p>
+            <div className="inline-flex items-center gap-1.5 mb-2 text-coolgray font-mono text-[11px] font-bold uppercase tracking-widest">
+              <Shield className="w-3.5 h-3.5 text-[#3D7EFF]" />
+              <span>Decentralized Restitution Protocol</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black text-charcoal tracking-tight leading-tight mb-2">
+              Log In
+            </h1>
+            <p className="text-xs sm:text-sm text-coolgray font-normal">
+              Access your ReclaimDAO restitution dashboard
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">
-                Email
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-sky-400" />
-                </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full pl-11 pr-4 py-3.5 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                  placeholder="Enter your email"
-                />
-              </div>
-              {serverErrors.filter(e => e.path === 'email').map((e, i) => (
-                <p key={i} className="mt-1 text-sm text-red-400">{e.msg || e.message}</p>
-              ))}
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-sky-400" />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full pl-11 pr-10 py-3.5 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+          {!showForgot ? (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Email Input */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-200" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-slate-400 hover:text-slate-200" />
-                  )}
-                </button>
+                  Email address <span className="text-[#3D7EFF]">*</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                    <Mail className="h-4 w-4" />
+                  </div>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors"
+                    placeholder="claimant@example.com"
+                    style={{ borderRadius: '0px' }}
+                  />
+                </div>
+                {serverErrors.filter(e => e.path === 'email').map((e, i) => (
+                  <p key={i} className="mt-1 text-xs text-red-500 font-medium">{e.msg || e.message}</p>
+                ))}
               </div>
-              {serverErrors.filter(e => e.path === 'password').map((e, i) => (
-                <p key={i} className="mt-1 text-sm text-red-400">{e.msg || e.message}</p>
-              ))}
-            </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-[#A85830] focus:ring-[#A85830] border-slate-700 bg-[#061833] rounded"
-                />
+              {/* Password Input */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label
+                    htmlFor="password"
+                    className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal"
+                  >
+                    Password <span className="text-[#3D7EFF]">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowForgot(true)}
+                    className="text-xs font-semibold text-[#3D7EFF] hover:underline cursor-pointer"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                    <Lock className="h-4 w-4" />
+                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-10 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium transition-colors"
+                    placeholder="Enter your account password"
+                    style={{ borderRadius: '0px' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-coolgray hover:text-charcoal cursor-pointer"
+                    style={{ borderRadius: '0px' }}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+                {serverErrors.filter(e => e.path === 'password').map((e, i) => (
+                  <p key={i} className="mt-1 text-xs text-red-500 font-medium">{e.msg || e.message}</p>
+                ))}
+              </div>
 
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-300 font-medium">
-                  Remember me
+              {/* Remember Me */}
+              <div className="flex items-center pt-1">
+                <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="h-4 w-4 accent-[#3D7EFF] border-[#D4D4CE] rounded-none cursor-pointer"
+                    style={{ borderRadius: '0px' }}
+                  />
+                  <span className="text-xs text-coolgray">Remember credentials on this workstation</span>
                 </label>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-4 px-6 rounded-xl font-black text-white shadow-xl transition-all text-base disabled:opacity-50 cursor-pointer hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)',
-                boxShadow: '0 8px 30px rgba(168, 88, 48, 0.45)'
-              }}
-            >
-              {loading ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  <span>Logging in...</span>
-                </div>
-              ) : (
-                'Log in'
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              disabled={loading}
-              className="text-sm font-semibold text-sky-300 hover:text-[#A85830] transition-colors cursor-pointer"
-            >
-              Forgot Password?
-            </button>
-          </div>
-
-          {showForgot && (
-            <div className="mt-6 space-y-4 pt-4 border-t border-white/10">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                  placeholder="Enter your email"
-                />
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading || !formData.email || !formData.password}
+                className={`w-full py-4 px-6 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+                  formData.email && formData.password && !loading
+                    ? 'bg-[#3D7EFF] hover:bg-electric-600 text-white cursor-pointer shadow-sm'
+                    : 'bg-gray-200 text-gray-400 border border-gray-200 cursor-not-allowed'
+                }`}
+                style={{ borderRadius: '0px' }}
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Authenticating...</span>
+                  </div>
+                ) : (
+                  <>
+                    <span>Log In to Dashboard</span>
+                    <ArrowRight className="w-4 h-4 stroke-[2.2]" />
+                  </>
+                )}
+              </button>
+            </form>
+          ) : (
+            /* Forgot Password Flow in Swiss Architectural Style */
+            <div className="space-y-5">
+              <div
+                className="p-3.5 bg-[#F8F8F6] border border-[#D4D4CE] flex items-center gap-2 text-xs font-mono"
+                style={{ borderRadius: '0px' }}
+              >
+                <KeyRound className="w-4 h-4 text-[#3D7EFF] shrink-0" />
+                <span className="text-charcoal font-semibold">Self-Service Account Recovery Protocol</span>
               </div>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={sendOtp}
-                  disabled={sendingOtp}
-                  className="px-4 py-2.5 rounded-xl font-bold text-white shadow-lg disabled:opacity-50 cursor-pointer shrink-0"
-                  style={{ background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)' }}
-                >
-                  {sendingOtp ? 'Sending...' : 'Send OTP'}
-                </button>
+
+              <div>
+                <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                  Claimant Email Address
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="flex-1 px-3.5 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-medium"
+                    placeholder="claimant@example.com"
+                    style={{ borderRadius: '0px' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={sendOtp}
+                    disabled={sendingOtp || !formData.email}
+                    className="px-4 py-3 bg-[#2F2F34] hover:bg-charcoal text-white font-mono text-xs font-bold uppercase tracking-wider disabled:opacity-50 cursor-pointer"
+                    style={{ borderRadius: '0px' }}
+                  >
+                    {sendingOtp ? 'Sending...' : 'Send OTP'}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                  Verification OTP
+                </label>
                 <input
                   type="text"
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                  placeholder="Enter OTP"
+                  className="w-full px-3.5 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm font-mono tracking-widest"
+                  placeholder="Enter 6-digit OTP"
+                  style={{ borderRadius: '0px' }}
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+              <div>
+                <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                  New Password
+                </label>
                 <div className="relative">
                   <input
                     type={showNewPass ? 'text' : 'password'}
                     value={newPass}
                     onChange={(e) => setNewPass(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm font-semibold pr-10"
-                    placeholder="New password"
+                    className="w-full px-3.5 pr-10 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm"
+                    placeholder="Minimum 8 characters"
+                    style={{ borderRadius: '0px' }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowNewPass(!showNewPass)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-coolgray"
                   >
-                    {showNewPass ? (
-                      <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-200" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-slate-400 hover:text-slate-200" />
-                    )}
+                    {showNewPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
+              </div>
+
+              <div>
+                <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                  Confirm New Password
+                </label>
                 <div className="relative">
                   <input
                     type={showConfirmPass ? 'text' : 'password'}
                     value={confirmPass}
                     onChange={(e) => setConfirmPass(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#061833] border border-sky-400/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-[#A85830] text-sm font-semibold pr-10"
-                    placeholder="Confirm password"
+                    className="w-full px-3.5 pr-10 py-3 bg-white border border-[#D4D4CE] focus:border-[#3D7EFF] focus:outline-none text-charcoal text-sm"
+                    placeholder="Re-enter new password"
+                    style={{ borderRadius: '0px' }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPass(!showConfirmPass)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-coolgray"
                   >
-                    {showConfirmPass ? (
-                      <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-200" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-slate-400 hover:text-slate-200" />
-                    )}
+                    {showConfirmPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={changePasswordWithOtp}
-                disabled={changingPwd}
-                className="w-full py-3 px-6 rounded-xl font-bold text-white shadow-lg disabled:opacity-50 cursor-pointer"
-                style={{ background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)' }}
-              >
-                {changingPwd ? 'Changing...' : 'Change Password'}
-              </button>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowForgot(false)}
+                  className="flex-1 py-3.5 px-4 bg-white border border-[#D4D4CE] hover:border-charcoal text-charcoal font-bold text-xs uppercase tracking-wider cursor-pointer"
+                  style={{ borderRadius: '0px' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={changePasswordWithOtp}
+                  disabled={changingPwd || !otpCode || !newPass}
+                  className="flex-1 py-3.5 px-4 bg-[#3D7EFF] hover:bg-electric-600 text-white font-bold text-xs uppercase tracking-wider disabled:opacity-50 cursor-pointer shadow-sm"
+                  style={{ borderRadius: '0px' }}
+                >
+                  {changingPwd ? 'Updating...' : 'Set Password'}
+                </button>
+              </div>
             </div>
           )}
+
+          {/* Footer Link */}
+          <div className="mt-6 pt-6 border-t border-[#D4D4CE] text-center">
+            <p className="text-coolgray text-xs">
+              Don't have an account yet?{' '}
+              <Link
+                to="/register"
+                className="font-bold text-[#3D7EFF] hover:underline transition-colors ml-1"
+              >
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </div>
       </motion.div>
     </div>

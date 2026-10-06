@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   User, 
@@ -10,10 +10,16 @@ import {
   Save, 
   X,
   Shield,
+  ShieldCheck,
   MapPin,
   Phone,
   Wallet,
-  Send
+  Send,
+  Lock,
+  ArrowLeft,
+  CheckCircle2,
+  TrendingUp,
+  Coins
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
@@ -22,6 +28,7 @@ import toast from 'react-hot-toast';
 const Profile = () => {
   const { user, updateUser } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -108,6 +115,7 @@ const Profile = () => {
       if (cleaned.walletAddress && cleaned.walletAddress.length < 10) errors.push('Wallet address must be at least 10 characters');
       if (errors.length) {
         toast.error(errors[0]);
+        setLoading(false);
         return;
       }
 
@@ -155,118 +163,98 @@ const Profile = () => {
     setIsEditing(false);
   };
 
-  const getRoleColor = (role) => {
-    switch (role) {
-      case 'admin':
-        return 'from-blue-600 to-blue-700';
-      case 'moderator':
-        return 'from-blue-500 to-blue-600';
-      default:
-        return 'from-[#0f172a] to-[#2563eb]';
-    }
-  };
-
-  const getRoleIcon = (role) => {
-    switch (role) {
-      case 'admin':
-        return Shield;
-      case 'moderator':
-        return Award;
-      default:
-        return User;
-    }
-  };
-
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-[#F8F8F6] flex items-center justify-center">
+        <div className="font-mono text-charcoal text-sm uppercase tracking-wider font-bold">
+          Authenticating claimant node...
+        </div>
       </div>
     );
   }
 
-  const RoleIcon = getRoleIcon(user.role);
+  const userDisplayName = user.fullName || user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Claimant';
+  const userInitial = userDisplayName.charAt(0).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Profile Header */}
+    <div className="min-h-screen bg-[#F8F8F6] text-charcoal py-6 sm:py-10 md:py-12 selection:bg-[#3D7EFF] selection:text-white">
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+
+        {/* Masthead Header Section */}
+        <div className="border-b border-[#D4D4CE] pb-6 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#D4D4CE] text-charcoal text-[11px] font-mono font-bold uppercase tracking-wider shadow-sm"
+              style={{ borderRadius: '0px' }}
+            >
+              <User className="w-3.5 h-3.5 text-[#3D7EFF]" />
+              <span>Claimant Profile • Restitution Identity Node</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#D4D4CE] text-charcoal hover:border-[#3D7EFF] text-xs font-mono font-bold uppercase transition-all shadow-sm cursor-pointer"
+              style={{ borderRadius: '0px' }}
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
+            </button>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-charcoal tracking-tight">
+            Beneficiary <span className="text-[#3D7EFF]">Profile</span>
+          </h1>
+
+          <p className="text-coolgray text-xs sm:text-base max-w-2xl leading-relaxed">
+            Manage your authenticated recovery credentials, settlement wallet routing, and decentralized contact records.
+          </p>
+        </div>
+
+        {/* Profile Card */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#0a254d] text-white rounded-3xl border border-sky-400/25 p-6 sm:p-8 mb-8 shadow-xl"
+          className="bg-white border border-[#D4D4CE] p-5 sm:p-8 shadow-sm space-y-6"
+          style={{ borderRadius: '0px' }}
         >
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-6">
-            <div className="flex items-center space-x-6">
-              <div className="relative">
-                <div 
-                  className="w-24 h-24 rounded-full flex items-center justify-center border-2 border-white/20 shadow-lg"
-                  style={{ background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)' }}
-                >
-                  <span className="text-white text-3xl font-black tracking-wider">
-                    {(user.fullName || user.name || user.firstName || 'U').charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div className={`absolute -bottom-2 -right-2 w-8 h-8 bg-[#061833] text-[#A85830] rounded-full flex items-center justify-center border border-[#A85830]/40 shadow-md`}>
-                  <RoleIcon className="w-4 h-4 text-[#A85830]" />
-                </div>
+          {/* Header Row: Avatar, Name, Edit Button */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#D4D4CE]">
+            <div className="flex items-center gap-4 min-w-0">
+              <div
+                className="w-16 h-16 sm:w-20 sm:h-20 bg-[#3D7EFF] text-white flex items-center justify-center font-black text-2xl sm:text-3xl shrink-0 shadow-md border-2 border-white"
+                style={{ borderRadius: '0px' }}
+              >
+                {userInitial}
               </div>
 
-              {!isEditing && (
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">{user.fullName || user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim()}</h1>
-                  <div className="space-y-1.5 text-white font-bold text-sm">
-                    <div className="flex items-center space-x-2">
-                      <Mail className="w-4 h-4 text-[#A85830]" />
-                      <span>{user.email}</span>
-                    </div>
-                    {user.address && (
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="w-4 h-4 text-sky-400" />
-                        <span>{user.address}</span>
-                      </div>
-                    )}
-                    {user.telegramUsername && (
-                      <div className="flex items-center space-x-2">
-                        <Send className="w-4 h-4 text-sky-400" />
-                        <span>@{user.telegramUsername}</span>
-                      </div>
-                    )}
-                    {user.phoneNumber && (
-                      <div className="flex items-center space-x-2">
-                        <Phone className="w-4 h-4 text-[#10b981]" />
-                        <span>{user.phoneNumber}</span>
-                      </div>
-                    )}
-                    {user.walletAddress && (
-                      <div className="flex items-center space-x-2">
-                        <Wallet className="w-4 h-4 text-[#A85830]" />
-                        <span className="text-xs font-mono">{user.walletAddress.slice(0, 20)}...</span>
-                      </div>
-                    )}
-                    <div className="flex items-center space-x-2 text-xs text-white font-semibold pt-1">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>Joined {new Date(user.createdAt || Date.now()).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#061833] border border-sky-400/30 text-sky-300 shadow-sm">
-                      <RoleIcon className="w-3.5 h-3.5 mr-1 text-[#A85830]" />
-                      {user.role ? (user.role.charAt(0).toUpperCase() + user.role.slice(1)) : 'User'}
-                    </span>
-                  </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-xl sm:text-2xl font-black text-charcoal tracking-tight truncate">
+                    {userDisplayName}
+                  </h2>
+                  <span
+                    className="px-2.5 py-0.5 bg-[#F8F8F6] border border-[#D4D4CE] font-mono text-[10px] font-bold uppercase tracking-wider text-charcoal shrink-0"
+                    style={{ borderRadius: '0px' }}
+                  >
+                    {user.role ? (user.role.toUpperCase()) : 'CLAIMANT'}
+                  </span>
                 </div>
-              )}
+                <p className="font-mono text-xs text-coolgray mt-0.5 truncate">{user.email}</p>
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-coolgray mt-1">
+                  <Calendar className="w-3.5 h-3.5 text-coolgray" />
+                  <span>Dossier Created: {new Date(user.createdAt || Date.now()).toLocaleDateString()}</span>
+                </div>
+              </div>
             </div>
 
             {!isEditing && (
               <button
+                type="button"
                 onClick={() => setIsEditing(true)}
-                className="text-white px-6 py-2.5 rounded-xl flex items-center space-x-2 transition-all font-bold shadow-lg cursor-pointer hover:scale-105"
-                style={{
-                  background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)',
-                  boxShadow: '0 8px 25px rgba(168, 88, 48, 0.4)'
-                }}
+                className="w-full sm:w-auto px-5 py-3 bg-[#3D7EFF] hover:bg-blue-600 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 shadow-sm cursor-pointer min-h-[44px]"
+                style={{ borderRadius: '0px' }}
               >
                 <Edit3 className="w-4 h-4" />
                 <span>Edit Profile</span>
@@ -274,122 +262,278 @@ const Profile = () => {
             )}
           </div>
 
-          {/* Edit Form */}
-          {isEditing && (
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <Edit3 className="w-5 h-5 text-[#A85830]" /> Edit Profile Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Profile Overview (Non-Editing View) */}
+          {!isEditing ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] space-y-1" style={{ borderRadius: '0px' }}>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray block">
+                  Email Address
+                </span>
+                <div className="flex items-center gap-2 text-sm font-bold text-charcoal break-all">
+                  <Mail className="w-4 h-4 text-[#3D7EFF] shrink-0" />
+                  <span>{user.email || '—'}</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] space-y-1" style={{ borderRadius: '0px' }}>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray block">
+                  Username / Protocol Handle
+                </span>
+                <div className="flex items-center gap-2 text-sm font-bold text-charcoal">
+                  <User className="w-4 h-4 text-[#3D7EFF] shrink-0" />
+                  <span>{user.username || (user.email ? user.email.split('@')[0] : '—')}</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] space-y-1" style={{ borderRadius: '0px' }}>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray block">
+                  Phone Number
+                </span>
+                <div className="flex items-center gap-2 text-sm font-bold text-charcoal">
+                  <Phone className="w-4 h-4 text-[#3D7EFF] shrink-0" />
+                  <span>{user.phoneNumber || 'Not provided'}</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] space-y-1" style={{ borderRadius: '0px' }}>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray block">
+                  Telegram Username
+                </span>
+                <div className="flex items-center gap-2 text-sm font-bold text-charcoal">
+                  <Send className="w-4 h-4 text-[#3D7EFF] shrink-0" />
+                  <span>{user.telegramUsername ? `@${user.telegramUsername}` : 'Not provided'}</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] space-y-1 md:col-span-2" style={{ borderRadius: '0px' }}>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray block">
+                  Physical / Mailing Address
+                </span>
+                <div className="flex items-center gap-2 text-sm font-bold text-charcoal">
+                  <MapPin className="w-4 h-4 text-[#3D7EFF] shrink-0" />
+                  <span>{user.address || 'Not provided'}</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] space-y-1 md:col-span-2" style={{ borderRadius: '0px' }}>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray block">
+                  Settlement Restitution Wallet Address
+                </span>
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-mono font-bold text-charcoal break-all">
+                  <Wallet className="w-4 h-4 text-[#3D7EFF] shrink-0" />
+                  <span>{user.walletAddress || 'No settlement address linked yet'}</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Editing Form View - 100% Mobile Responsive */
+            <div className="space-y-6 pt-2">
+              <div className="flex items-center justify-between pb-3 border-b border-[#D4D4CE]">
+                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-charcoal flex items-center gap-2">
+                  <Edit3 className="w-4 h-4 text-[#3D7EFF]" />
+                  <span>Modify Claimant Information</span>
+                </h3>
+                <span className="font-mono text-[10px] text-coolgray uppercase">Dossier Update</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* First Name */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1">First Name</label>
+                  <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                    First Name <span className="text-[#3D7EFF]">*</span>
+                  </label>
                   <input
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full bg-[#061833] border border-sky-400/30 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
+                    className="w-full bg-white border border-[#D4D4CE] px-3.5 py-3 text-base sm:text-sm font-medium text-charcoal focus:outline-none focus:border-[#3D7EFF] transition-colors"
                     placeholder="First Name"
+                    style={{ borderRadius: '0px' }}
                   />
                 </div>
+
+                {/* Last Name */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1">Last Name</label>
+                  <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                    Last Name <span className="text-[#3D7EFF]">*</span>
+                  </label>
                   <input
                     type="text"
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full bg-[#061833] border border-sky-400/30 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
+                    className="w-full bg-white border border-[#D4D4CE] px-3.5 py-3 text-base sm:text-sm font-medium text-charcoal focus:outline-none focus:border-[#3D7EFF] transition-colors"
                     placeholder="Last Name"
+                    style={{ borderRadius: '0px' }}
                   />
                 </div>
+
+                {/* Email Address */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1">Email</label>
+                  <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-[#061833] border border-sky-400/30 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                    placeholder="Email"
+                    className="w-full bg-white border border-[#D4D4CE] px-3.5 py-3 text-base sm:text-sm font-medium text-charcoal focus:outline-none focus:border-[#3D7EFF] transition-colors"
+                    placeholder="claimant@domain.com"
+                    style={{ borderRadius: '0px' }}
                   />
                 </div>
+
+                {/* Username */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1">Username</label>
+                  <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                    Username
+                  </label>
                   <input
                     type="text"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    className="w-full bg-[#061833] border border-sky-400/30 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
+                    className="w-full bg-white border border-[#D4D4CE] px-3.5 py-3 text-base sm:text-sm font-medium text-charcoal focus:outline-none focus:border-[#3D7EFF] transition-colors"
                     placeholder="Username"
+                    style={{ borderRadius: '0px' }}
                   />
                 </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1">Address</label>
-                  <input
-                    type="text"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full bg-[#061833] border border-sky-400/30 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                    placeholder="Address"
-                  />
-                </div>
+
+                {/* Phone Number */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1">Telegram Username</label>
-                  <input
-                    type="text"
-                    value={formData.telegramUsername}
-                    onChange={(e) => setFormData({ ...formData, telegramUsername: e.target.value })}
-                    className="w-full bg-[#061833] border border-sky-400/30 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                    placeholder="Telegram Username"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1">Phone Number</label>
+                  <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                    Phone Number
+                  </label>
                   <input
                     type="tel"
                     value={formData.phoneNumber}
                     onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                    className="w-full bg-[#061833] border border-sky-400/30 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                    placeholder="Phone Number"
+                    className="w-full bg-white border border-[#D4D4CE] px-3.5 py-3 text-base sm:text-sm font-medium text-charcoal focus:outline-none focus:border-[#3D7EFF] transition-colors"
+                    placeholder="+1 555 123 4567"
+                    style={{ borderRadius: '0px' }}
                   />
                 </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1">Wallet Address</label>
+
+                {/* Telegram Username */}
+                <div>
+                  <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                    Telegram Username
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.telegramUsername}
+                    onChange={(e) => setFormData({ ...formData, telegramUsername: e.target.value })}
+                    className="w-full bg-white border border-[#D4D4CE] px-3.5 py-3 text-base sm:text-sm font-medium text-charcoal focus:outline-none focus:border-[#3D7EFF] transition-colors"
+                    placeholder="username (without @)"
+                    style={{ borderRadius: '0px' }}
+                  />
+                </div>
+
+                {/* Physical Address */}
+                <div className="sm:col-span-2">
+                  <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                    Physical / Residential Address
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    className="w-full bg-white border border-[#D4D4CE] px-3.5 py-3 text-base sm:text-sm font-medium text-charcoal focus:outline-none focus:border-[#3D7EFF] transition-colors"
+                    placeholder="123 Financial Way, Suite 400"
+                    style={{ borderRadius: '0px' }}
+                  />
+                </div>
+
+                {/* Wallet Address */}
+                <div className="sm:col-span-2">
+                  <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                    Settlement Restitution Wallet Address (ERC-20 / TRC-20 / BTC)
+                  </label>
                   <input
                     type="text"
                     value={formData.walletAddress}
                     onChange={(e) => setFormData({ ...formData, walletAddress: e.target.value })}
-                    className="w-full bg-[#061833] border border-sky-400/30 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-[#A85830] text-sm font-semibold"
-                    placeholder="Wallet Address"
+                    className="w-full bg-white border border-[#D4D4CE] px-3.5 py-3 text-base sm:text-sm font-mono text-charcoal focus:outline-none focus:border-[#3D7EFF] transition-colors placeholder:font-sans"
+                    placeholder="0x... or T..."
+                    style={{ borderRadius: '0px' }}
                   />
                 </div>
               </div>
 
-              {/* Action Buttons Row */}
-              <div className="flex items-center justify-end space-x-3 pt-6 mt-6 border-t border-white/10">
+              {/* Form Action Buttons */}
+              <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t border-[#D4D4CE]">
                 <button
+                  type="button"
                   onClick={handleCancel}
-                  className="bg-[#061833] hover:bg-[#071d3d] text-white px-5 py-2.5 rounded-xl flex items-center space-x-2 transition-all font-bold border border-sky-400/20 cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3 bg-white border border-[#D4D4CE] hover:border-charcoal text-charcoal font-mono font-bold text-xs uppercase tracking-wider transition-all cursor-pointer min-h-[44px]"
+                  style={{ borderRadius: '0px' }}
                 >
-                  <X className="w-4 h-4" />
-                  <span>Cancel</span>
+                  Cancel
                 </button>
                 <button
+                  type="button"
                   onClick={handleSave}
                   disabled={loading}
-                  className="text-white px-6 py-2.5 rounded-xl flex items-center space-x-2 transition-all font-bold shadow-lg disabled:opacity-50 cursor-pointer hover:scale-105"
-                  style={{
-                    background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)',
-                    boxShadow: '0 8px 25px rgba(168, 88, 48, 0.4)'
-                  }}
+                  className="w-full sm:w-auto px-6 py-3 bg-[#3D7EFF] hover:bg-blue-600 disabled:opacity-50 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer min-h-[44px]"
+                  style={{ borderRadius: '0px' }}
                 >
                   <Save className="w-4 h-4" />
-                  <span>{loading ? 'Saving...' : 'Save Changes'}</span>
+                  <span>{loading ? 'Saving Changes...' : 'Save Changes'}</span>
                 </button>
               </div>
             </div>
           )}
         </motion.div>
 
-        
+        {/* Security & Loss Dossier Summary Strip */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          {/* Card 1: Account Security */}
+          <div
+            className="bg-white border border-[#D4D4CE] p-6 shadow-sm space-y-4"
+            style={{ borderRadius: '0px' }}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-[#D4D4CE]">
+              <span className="font-mono text-[11px] font-bold text-coolgray uppercase tracking-wider flex items-center gap-2">
+                <Lock className="w-4 h-4 text-[#3D7EFF]" />
+                <span>Account Security</span>
+              </span>
+              <span className="font-mono text-[10px] text-emerald-600 font-bold uppercase">Active 2FA</span>
+            </div>
+
+            <p className="text-xs text-coolgray leading-relaxed font-medium">
+              Your account is secured with email OTP cryptographic verification. You can reset your password anytime from the top navigation profile menu.
+            </p>
+
+            <div className="pt-2 font-mono text-xs text-charcoal">
+              <span>Account Status: </span>
+              <strong className="text-emerald-600 font-bold uppercase">Audited Claimant</strong>
+            </div>
+          </div>
+
+          {/* Card 2: Restitution Standing */}
+          <div
+            className="bg-white border border-[#D4D4CE] p-6 shadow-sm space-y-4"
+            style={{ borderRadius: '0px' }}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-[#D4D4CE]">
+              <span className="font-mono text-[11px] font-bold text-coolgray uppercase tracking-wider flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#3D7EFF]" />
+                <span>Restitution Standing</span>
+              </span>
+              <span className="font-mono text-[10px] text-[#3D7EFF] font-bold uppercase">Audited</span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 font-mono text-xs">
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE]">
+                <span className="text-[10px] text-coolgray uppercase block">Verified Loss</span>
+                <span className="text-base font-black text-charcoal block mt-0.5">${(user.verifiedLoss || 0).toLocaleString()}</span>
+              </div>
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE]">
+                <span className="text-[10px] text-coolgray uppercase block">Restituted</span>
+                <span className="text-base font-black text-[#3D7EFF] block mt-0.5">${(user.amountRestituted || 0).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

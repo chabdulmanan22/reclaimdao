@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { ShieldAlert, ArrowRight, Clock, FileText } from 'lucide-react';
 import ResourcePageLayout from './ResourcePageLayout';
 
 const formatArticleDate = (val) => {
@@ -48,72 +49,93 @@ const RefundProgramsResourcePage = () => {
 
   return (
     <ResourcePageLayout
-      title="ReclaimDAO REFUND PROGRAMS"
+      title="Protocol Refund Programs"
       iconSrc="/images/resources/Refund_program_icon.png"
       iconAlt="Refund programs"
     >
-      <div className="mx-auto max-w-4xl min-w-0 space-y-8">
-        <div className="space-y-4 text-lg leading-relaxed text-gray-600">
+      <div className="mx-auto max-w-4xl min-w-0 space-y-6 sm:space-y-8">
+        <div className="space-y-3 text-sm sm:text-base leading-relaxed text-charcoal font-medium">
           <p>
-            ReclaimDAO is a decentralized asset recovery protocol that helps government agencies securely distribute
-            cryptocurrency recovered from illegal business practices and return funds to those who lost money.
-            Below are active refund programs for which ReclaimDAO has helped securely distribute recovered funds.
+            ReclaimDAO is a decentralized asset recovery protocol assisting claimants and government oversight agencies in securely cataloging cryptocurrency recovered from illicit exchange operators and returning funds through audited smart contracts.
           </p>
         </div>
 
-        <aside
-          className="rounded-2xl border-l-4 border-[#A85830] bg-[#0a254d] text-white px-6 py-5 text-base leading-relaxed shadow-lg"
-          role="note"
+        {/* Advisory Box */}
+        <div
+          className="border-l-4 border-l-[#3D7EFF] bg-white border border-[#D4D4CE] p-5 sm:p-6 shadow-sm space-y-2"
+          style={{ borderRadius: '0px' }}
         >
-          <p className="font-black text-[#A85830] uppercase tracking-wider text-sm">ReclaimDAO REFUND PROGRAMS</p>
-          <p className="mt-2 text-slate-200">
-            <strong className="text-white">ReclaimDAO will never request payment</strong> to help you pursue a claim, make threats, or instruct
-            you to transfer money. If you have been targeted by an illegal business practice or scam,{' '}
-            <strong className="text-white">report it to ReclaimDAO</strong> through our official channels only.
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-[10px] font-black uppercase tracking-wider text-[#3D7EFF]">
+              Restitution Security Standard
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm text-charcoal leading-relaxed">
+            <strong className="text-charcoal font-black">ReclaimDAO will never request upfront payment</strong> or private keys to process a restitution dossier. If you have been targeted by impersonators or an illegal platform, report it through official protocol verification channels only.
           </p>
-        </aside>
+        </div>
 
-        <div className="overflow-x-auto rounded-3xl border border-sky-400/25 bg-[#0a254d] shadow-2xl">
-          <h2 className="border-b border-white/10 px-6 py-5 text-center font-serif text-xl font-bold tracking-wide text-white md:text-2xl">
-            Active <span className="text-[#A85830]">Refund Programs</span>
-          </h2>
+        {/* Programs Table / Ledger Card */}
+        <div
+          className="bg-white border border-[#D4D4CE] shadow-sm overflow-hidden"
+          style={{ borderRadius: '0px' }}
+        >
+          <div className="p-4 sm:p-6 border-b border-[#D4D4CE] flex items-center justify-between">
+            <h2 className="text-base sm:text-lg font-black text-charcoal tracking-tight flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#3D7EFF]" />
+              <span>Active Restitution Catalogs</span>
+            </h2>
+            <span
+              className="font-mono text-[10px] text-coolgray uppercase font-bold bg-[#F8F8F6] border border-[#D4D4CE] px-2.5 py-0.5"
+              style={{ borderRadius: '0px' }}
+            >
+              {rows.length} Published
+            </span>
+          </div>
+
           {loading ? (
-            <p className="px-5 py-10 text-center text-slate-300">Loading programs…</p>
+            <p className="p-10 text-center font-mono text-xs text-coolgray">
+              Synchronizing active program ledgers…
+            </p>
           ) : rows.length === 0 ? (
-            <p className="px-5 py-10 text-center text-slate-300">
-              No active articles are published yet. Check back soon or contact us if you believe a program should be
-              listed.
+            <p className="p-10 text-center font-mono text-xs text-coolgray">
+              No active restitution programs cataloged yet. Check back soon for updated case dockets.
             </p>
           ) : (
-            <table className="w-full min-w-[280px] border-collapse text-left text-slate-200">
-              <thead>
-                <tr className="border-b border-white/10 bg-[#061833]">
-                  <th className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-slate-200 md:px-6">
-                    Refund Program
-                  </th>
-                  <th className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-slate-200 md:px-6">
-                    Date
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((article) => (
-                  <tr key={article.slug || article._id} className="border-b border-slate-800 last:border-0">
-                    <td className="px-4 py-4 align-top md:px-6">
-                      <Link
-                        to={`/articles/${article.slug}`}
-                        className="font-medium text-sky-400 underline decoration-sky-500/50 underline-offset-2 transition hover:text-sky-300"
-                      >
-                        {article.title}
-                      </Link>
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-4 align-top text-slate-400 md:px-6">
-                      {formatArticleDate(article.createdDisplayDate || article.createdAt)}
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#F8F8F6] border-b border-[#D4D4CE] font-mono text-[11px] font-bold text-coolgray uppercase tracking-wider">
+                    <th className="py-3 px-4 sm:px-6">Restitution Docket / Article</th>
+                    <th className="py-3 px-4 sm:px-6 text-right">Publication Date</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-[#D4D4CE] text-xs font-mono">
+                  {rows.map((article) => (
+                    <tr
+                      key={article.slug || article._id}
+                      className="hover:bg-[#F8F8F6] transition-colors"
+                    >
+                      <td className="py-4 px-4 sm:px-6">
+                        <Link
+                          to={`/articles/${article.slug}`}
+                          className="font-bold font-sans text-sm text-charcoal hover:text-[#3D7EFF] transition-colors flex items-center gap-1.5 group"
+                        >
+                          <span className="group-hover:underline">{article.title}</span>
+                          <ArrowRight className="w-3.5 h-3.5 text-coolgray group-hover:text-[#3D7EFF] transition-colors shrink-0" />
+                        </Link>
+                      </td>
+                      <td className="py-4 px-4 sm:px-6 text-right text-coolgray whitespace-nowrap">
+                        <div className="inline-flex items-center gap-1.5 justify-end">
+                          <Clock className="w-3.5 h-3.5 text-coolgray" />
+                          <span>{formatArticleDate(article.createdDisplayDate || article.createdAt)}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>

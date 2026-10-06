@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { addReceipt as dsAddReceipt, getActiveWallets as dsGetActiveWallets, getContributionTimer as dsGetContributionTimer, clearContributionTimer as dsClearContributionTimer, getReceipts as dsGetReceipts, getUsersMap as dsGetUsersMap } from '../utils/datastore';
-import { motion } from 'framer-motion';
+import {
+  addReceipt as dsAddReceipt,
+  getActiveWallets as dsGetActiveWallets,
+  getContributionTimer as dsGetContributionTimer,
+  clearContributionTimer as dsClearContributionTimer,
+  getReceipts as dsGetReceipts,
+  getUsersMap as dsGetUsersMap
+} from '../utils/datastore';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   Clock,
@@ -9,7 +16,11 @@ import {
   Users,
   DollarSign,
   Copy,
-  CheckCircle
+  CheckCircle,
+  ShieldCheck,
+  Check,
+  Upload,
+  X
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useNavigate } from 'react-router-dom';
@@ -36,6 +47,7 @@ const Contribute = () => {
   const [hasContributionRound, setHasContributionRound] = useState(false);
   const [roundFinished, setRoundFinished] = useState(false);
   const [publicContributionsEnabled, setPublicContributionsEnabled] = useState(false);
+
   const finalizeRound = () => {
     if (roundFinished) return;
     setRoundFinished(true);
@@ -57,7 +69,6 @@ const Contribute = () => {
           setIsContributionActive(data.data.value);
         }
       } catch (error) {
-        // Silently fail, default to true
         console.error('Error fetching contribution status:', error);
       }
       try {
@@ -70,9 +81,8 @@ const Contribute = () => {
       }
 
       setTimer(dsGetContributionTimer());
-      
+
       try {
-        // Fetch wallets from server
         const wRes = await axios.get('/api/settings/activeWallets');
         const sWallets = wRes?.data?.data?.value;
         if (Array.isArray(sWallets)) {
@@ -102,7 +112,6 @@ const Contribute = () => {
         setIsRoundWindowActive(Boolean(localTimer?.endTime && nowMs <= localTimer.endTime));
       }
 
-      // Fetch actual recent contributions from server if logged in
       let mapped = [];
       try {
         const token = localStorage.getItem('token');
@@ -125,7 +134,6 @@ const Contribute = () => {
         console.error('Error fetching server contributions:', e);
       }
 
-      // Fallback/Merge with local datastore for guest submissions
       if (mapped.length === 0) {
         const raw = dsGetReceipts();
         const users = dsGetUsersMap ? dsGetUsersMap() : {};
@@ -143,7 +151,7 @@ const Contribute = () => {
       setRecentContributions(mapped.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)).slice(0, 5));
     };
     load();
-    const interval = setInterval(load, 15000); // Refresh every 15s
+    const interval = setInterval(load, 15000);
     const onUpdate = () => load();
     window.addEventListener('datastore:update', onUpdate);
     return () => {
@@ -152,9 +160,7 @@ const Contribute = () => {
     };
   }, []);
 
-  // Contribution tiers removed
-
-  // Timer countdown effect from datastore
+  // Timer countdown
   useEffect(() => {
     const interval = setInterval(() => {
       if (!timer?.endTime) {
@@ -176,7 +182,7 @@ const Contribute = () => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // Calculate crypto amount when USD amount or coin changes
+  // Calculate crypto amount
   useEffect(() => {
     if (amount && selectedCoin) {
       const w = wallets.find(c => c.symbol === selectedCoin);
@@ -217,33 +223,32 @@ const Contribute = () => {
 
     setShowQR(true);
     if (!hasContributionRound) {
-      toast('No admin-set round: QR available, points won’t be added');
+      toast('No active round: QR available, points will be credited upon admin audit');
     } else {
-      toast.success('QR code generated! Scan to send payment');
+      toast.success('Payment address ready. Scan QR or copy address');
     }
   };
 
   const copyWalletAddress = () => {
+    if (!walletAddress) return;
     navigator.clipboard.writeText(walletAddress);
-    toast.success('Wallet address copied!');
+    toast.success('Wallet address copied to clipboard!');
   };
-
-  // Referral removed
 
   const handleBackToDashboard = () => {
     navigate('/dashboard');
   };
 
   const generateQRCodeData = () => {
-    return `${selectedCoin}:${walletAddress}?amount=${cryptoAmount}&label=DOA Contribution`;
+    return `${selectedCoin}:${walletAddress}?amount=${cryptoAmount}&label=ReclaimDAO`;
   };
 
   const handleReceiptChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+    const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'application/pdf'];
     if (!allowed.includes(file.type)) {
-      toast.error('Only PNG, JPG, and PDF files are allowed');
+      toast.error('Only PNG, JPG, WEBP, and PDF files are allowed');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -268,7 +273,7 @@ const Contribute = () => {
         return;
       }
       if (!receiptFile) {
-        toast.error('Please upload a receipt (screenshot or PDF)');
+        toast.error('Please upload a payment receipt screenshot or PDF');
         return;
       }
 
@@ -286,7 +291,6 @@ const Contribute = () => {
       });
 
       if (data?.success) {
-        // Also record locally so admin views reflect immediately
         dsAddReceipt({
           userEmail: user?.email || 'anonymous@local',
           amount: Number(amount) || 0,
@@ -294,11 +298,7 @@ const Contribute = () => {
           url: data?.data?.receiptUrl || transactionHash || '',
           notes: `Uploaded via API${transactionHash ? ` • tx ${transactionHash}` : ''}`
         });
-        if (!hasContributionRound && !publicContributionsEnabled) {
-          toast.success('Proof submitted. Points will not be added (round inactive).');
-        } else {
-          toast.success('Proof submitted! We will review and credit points.');
-        }
+        toast.success('Proof submitted! We will audit and credit points.');
         setReceiptFile(null);
         setTransactionHash('');
         setShowQR(false);
@@ -310,7 +310,6 @@ const Contribute = () => {
         toast.error(data?.message || 'Failed to submit proof');
       }
     } catch (err) {
-      // Fallback: store receipt locally
       dsAddReceipt({
         userEmail: user?.email || 'anonymous@local',
         amount: Number(amount) || 0,
@@ -318,7 +317,7 @@ const Contribute = () => {
         url: transactionHash || '',
         notes: receiptFile?.name || 'Local submission'
       });
-      toast.success('Proof saved locally. Admin can verify and award points.');
+      toast.success('Proof recorded for verification by administrator.');
       setReceiptFile(null);
       setTransactionHash('');
       setShowQR(false);
@@ -332,357 +331,449 @@ const Contribute = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center mb-6 sm:mb-8"
-        >
-          <button
-            onClick={handleBackToDashboard}
-            className="mr-3 sm:mr-4 p-2.5 bg-[#0a254d] hover:bg-[#0d2f61] text-white rounded-xl border border-sky-400/25 transition-colors shadow-md cursor-pointer"
+    <div className="min-h-screen bg-[#F8F8F6] text-charcoal py-6 sm:py-10 md:py-12 selection:bg-[#3D7EFF] selection:text-white">
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+
+        {/* Masthead Header Section */}
+        <div className="border-b border-[#D4D4CE] pb-6 space-y-3">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#D4D4CE] text-charcoal text-[11px] font-mono font-bold uppercase tracking-wider shadow-sm"
+            style={{ borderRadius: '0px' }}
           >
-            <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-          </button>
-          <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 mb-1">DAO <span className="text-[#A85830]">Contribution</span></h1>
-            <p className="text-sm sm:text-base text-slate-600">Contribute to the DAO's progress and earn points</p>
+            <ShieldCheck className="w-3.5 h-3.5 text-[#3D7EFF]" />
+            <span>DAO Ecosystem • Protocol Contribution Node</span>
           </div>
-        </motion.div>
 
-        {/* Voluntary Notification Banner - ALWAYS shown */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-amber-500/10 backdrop-blur-md border border-amber-500/30 rounded-xl p-4 mb-6 flex items-start gap-4"
+          <div className="flex items-center gap-3 sm:gap-4">
+            <button
+              type="button"
+              onClick={handleBackToDashboard}
+              className="p-2.5 bg-white hover:bg-[#F8F8F6] text-charcoal border border-[#D4D4CE] transition-all shadow-sm cursor-pointer shrink-0"
+              style={{ borderRadius: '0px' }}
+              title="Return to Dashboard"
+            >
+              <ArrowLeft className="w-5 h-5 text-charcoal" />
+            </button>
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-charcoal tracking-tight">
+                DAO <span className="text-[#3D7EFF]">Contribution</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-coolgray font-medium mt-0.5">
+                Support protocol recovery operations and earn restitution governance points
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Voluntary Contribution Banner */}
+        <div
+          className="p-4 bg-white border border-[#D4D4CE] flex items-start gap-3.5 shadow-sm"
+          style={{ borderRadius: '0px' }}
         >
-          <div className="bg-amber-500 rounded-full p-1 mt-0.5 flex-shrink-0">
-            <CheckCircle className="w-4 h-4 text-white" />
+          <div
+            className="p-1.5 bg-[#F8F8F6] border border-[#D4D4CE] text-[#3D7EFF] shrink-0 mt-0.5"
+            style={{ borderRadius: '0px' }}
+          >
+            <CheckCircle className="w-4 h-4 text-[#3D7EFF]" />
           </div>
-          <p className="text-amber-200 text-sm sm:text-base font-medium">
-            Contributions are voluntary and optional. Your support is appreciated but not required.
+          <p className="text-xs sm:text-sm text-coolgray leading-relaxed">
+            Contributions to ReclaimDAO are strictly <strong className="text-charcoal font-bold">voluntary and optional</strong>. Your community support assists escrow funding, but is never mandatory for individual claims.
           </p>
-        </motion.div>
+        </div>
 
-
-
-        {/* Timer Section - Only show if a round is actually active/running */}
+        {/* Timer Section (If Active Contribution Round is Running) */}
         {timer?.endTime && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 text-center"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white border border-[#D4D4CE] p-6 text-center shadow-sm space-y-2"
+            style={{ borderRadius: '0px' }}
           >
-            <div className="flex items-center justify-center mb-4">
-              <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-green-400 mr-2 sm:mr-3" />
-              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">Contribution Round</h2>
+            <div className="inline-flex items-center gap-2 font-mono text-[11px] font-bold text-[#3D7EFF] uppercase tracking-wider">
+              <Clock className="w-4 h-4 text-[#3D7EFF]" />
+              <span>Active Contribution Round Closes In</span>
             </div>
-            <div className="text-xl sm:text-2xl lg:text-4xl font-bold text-white mb-2">
+            <div className="text-3xl sm:text-4xl font-mono font-black text-charcoal tracking-tight">
               {countdown}
             </div>
-            <p className="text-sm sm:text-base text-gray-300">Until the current contribution round ends</p>
+            <p className="text-xs font-mono text-coolgray">
+              Special governance point multipliers apply during active rounds
+            </p>
           </motion.div>
         )}
 
-
-
-        {/* Contribution Tiers & Points — visible only when contributions are on */}
+        {/* Contribution Tiers & Points */}
         {canContribute && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20 mb-6 sm:mb-8"
+          <div
+            className="bg-white border border-[#D4D4CE] p-6 shadow-sm space-y-4"
+            style={{ borderRadius: '0px' }}
           >
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <h3 className="text-lg font-bold text-white mb-3">Contribution Tiers &amp; Points</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm">
-                    <span className="text-gray-300">$50–$99</span>
-                    <span className="text-green-400 font-semibold">15 points</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm">
-                    <span className="text-gray-300">$100–$299</span>
-                    <span className="text-green-400 font-semibold">30 points</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm">
-                    <span className="text-gray-300">$300–$499</span>
-                    <span className="text-green-400 font-semibold">100 points</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm">
-                    <span className="text-gray-300">$500–$999</span>
-                    <span className="text-green-400 font-semibold">300 points</span>
-                  </div>
-                  <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm">
-                    <span className="text-gray-300">$1000–∞</span>
-                    <span className="text-green-400 font-semibold">1000 points</span>
-                  </div>
-                </div>
+            <div className="flex items-center justify-between pb-3 border-b border-[#D4D4CE]">
+              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-charcoal flex items-center gap-2">
+                <Coins className="w-4 h-4 text-[#3D7EFF]" />
+                <span>Contribution Tiers & Governance Points</span>
+              </h3>
+              <span className="font-mono text-[10px] text-coolgray uppercase tracking-widest">Protocol Ratio</span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3 font-mono">
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE] text-center" style={{ borderRadius: '0px' }}>
+                <span className="text-[11px] text-coolgray block">$50 – $99</span>
+                <span className="text-sm font-bold text-[#3D7EFF] block mt-1">+15 pts</span>
+              </div>
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE] text-center" style={{ borderRadius: '0px' }}>
+                <span className="text-[11px] text-coolgray block">$100 – $299</span>
+                <span className="text-sm font-bold text-[#3D7EFF] block mt-1">+30 pts</span>
+              </div>
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE] text-center" style={{ borderRadius: '0px' }}>
+                <span className="text-[11px] text-coolgray block">$300 – $499</span>
+                <span className="text-sm font-bold text-[#3D7EFF] block mt-1">+100 pts</span>
+              </div>
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE] text-center" style={{ borderRadius: '0px' }}>
+                <span className="text-[11px] text-coolgray block">$500 – $999</span>
+                <span className="text-sm font-bold text-[#3D7EFF] block mt-1">+300 pts</span>
+              </div>
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE] text-center col-span-2 sm:col-span-1" style={{ borderRadius: '0px' }}>
+                <span className="text-[11px] text-coolgray block">$1,000+</span>
+                <span className="text-sm font-bold text-[#3D7EFF] block mt-1">+1,000 pts</span>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
-
-        {/* Contribution Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mobile-glass rounded-xl mobile-card mb-6 sm:mb-8"
+        {/* Contribution Form Card */}
+        <div
+          className="bg-white border border-[#D4D4CE] p-6 sm:p-8 shadow-sm space-y-6"
+          style={{ borderRadius: '0px' }}
         >
-          <h3 className="mobile-subheader font-bold text-white mb-4 sm:mb-6">Make a Contribution</h3>
+          <div className="flex items-center justify-between pb-4 border-b border-[#D4D4CE]">
+            <div>
+              <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#3D7EFF]">
+                Step 1
+              </span>
+              <h3 className="text-lg sm:text-xl font-black text-charcoal tracking-tight mt-0.5">
+                Make a Contribution
+              </h3>
+            </div>
+            <span className="font-mono text-[10px] text-coolgray uppercase tracking-wider">
+              {canContribute ? 'Contributions Active' : 'Contributions Standby'}
+            </span>
+          </div>
 
           {/* Amount Input */}
-          <div className="mb-4 sm:mb-6">
-            <label className="block text-white font-semibold mb-2 mobile-text">
-              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 inline mr-1" />
-              Enter Amount in USD
+          <div>
+            <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+              Enter Amount in USD (Min $50) <span className="text-[#3D7EFF]">*</span>
             </label>
-            <input
-              type={canContribute ? "number" : "text"}
-              value={canContribute ? amount : "Contributions are disabled"}
-              onChange={(e) => canContribute && setAmount(e.target.value)}
-              placeholder="$50"
-              className={`w-full bg-white/10 border rounded-lg px-3 sm:px-4 py-3 text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none mobile-text touch-target transition-all ${
-                !canContribute 
-                  ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-bold text-center cursor-not-allowed' 
-                  : 'border-white/20'
-              }`}
-              min="50"
-              disabled={!canContribute}
-            />
-            <p className="mt-2 text-xs sm:text-sm text-gray-300">Enter amount in USD</p>
-            {amount && hasContributionRound && (
-              <div className="mt-2 text-xs sm:text-sm">
-                <span className="text-gray-300">You will earn: </span>
-                <span className="text-green-400 font-bold">{getPointsForAmount(amount)} points</span>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-coolgray">
+                <DollarSign className="w-4 h-4" />
+              </div>
+              <input
+                type={canContribute ? "number" : "text"}
+                value={canContribute ? amount : "Contributions currently paused"}
+                onChange={(e) => canContribute && setAmount(e.target.value)}
+                placeholder="50"
+                min="50"
+                disabled={!canContribute}
+                className={`w-full pl-10 pr-3.5 py-3 bg-white border border-[#D4D4CE] text-charcoal text-base sm:text-sm font-medium focus:border-[#3D7EFF] focus:outline-none transition-colors ${
+                  !canContribute ? 'bg-[#F8F8F6] text-coolgray cursor-not-allowed opacity-80' : ''
+                }`}
+                style={{ borderRadius: '0px' }}
+              />
+            </div>
+            {amount && (hasContributionRound || publicContributionsEnabled) && (
+              <div className="mt-2 font-mono text-xs text-coolgray flex items-center justify-between">
+                <span>Governance points credit:</span>
+                <strong className="text-[#3D7EFF] font-black">+{getPointsForAmount(amount)} points</strong>
               </div>
             )}
           </div>
 
           {/* Cryptocurrency Selection */}
-          <div className="mb-4 sm:mb-6">
-            <label className="block text-white font-semibold mb-2 mobile-text">
-              Select Cryptocurrency
+          <div>
+            <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-2">
+              Select Protocol Cryptocurrency <span className="text-[#3D7EFF]">*</span>
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 responsive-gap">
-              {wallets.map((crypto) => (
-                <button
-                  key={crypto.symbol}
-                  onClick={() => setSelectedCoin(crypto.symbol)}
-                  className={`p-2 sm:p-3 rounded-lg border-2 transition-all duration-300 touch-target ${selectedCoin === crypto.symbol
-                    ? 'border-purple-500 bg-purple-500/20 text-white'
-                    : 'border-white/20 bg-white/5 text-gray-300 hover:border-purple-400'
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {wallets.map((crypto) => {
+                const isSelected = selectedCoin === crypto.symbol;
+                return (
+                  <button
+                    key={crypto.symbol}
+                    type="button"
+                    onClick={() => setSelectedCoin(crypto.symbol)}
+                    disabled={wallets.length === 0 || !canContribute}
+                    className={`p-3.5 border transition-all text-left cursor-pointer min-h-[58px] ${
+                      isSelected
+                        ? 'bg-[#F8F8F6] border-2 border-[#3D7EFF] shadow-sm'
+                        : 'bg-white border-[#D4D4CE] hover:border-charcoal'
                     } ${!canContribute ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  disabled={wallets.length === 0 || !canContribute}
-                >
-                  <div className="font-bold text-sm sm:text-base">{crypto.symbol}</div>
-                  <div className="text-xs text-gray-400">{crypto.name}</div>
-                  {crypto.rate && (
-                    <div className="text-xs text-green-400">${crypto.rate}</div>
-                  )}
-                </button>
-              ))}
+                    style={{ borderRadius: '0px' }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono font-black text-sm text-charcoal">{crypto.symbol}</span>
+                      {isSelected && (
+                        <div className="w-2 h-2 rounded-full bg-[#3D7EFF]" />
+                      )}
+                    </div>
+                    <div className="text-[11px] text-coolgray mt-0.5 truncate">{crypto.name}</div>
+                    {crypto.rate && (
+                      <div className="font-mono text-[10px] text-[#3D7EFF] mt-1 font-bold">
+                        1 {crypto.symbol} = ${crypto.rate}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Estimate Display */}
+          {/* Payment Estimate Preview */}
           {amount && selectedCoin && cryptoAmount && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              className="bg-white/10 rounded-xl p-4 mb-6"
+            <div
+              className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] space-y-2 font-mono text-xs"
+              style={{ borderRadius: '0px' }}
             >
-              <h4 className="text-white font-semibold mb-3">Payment Details</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-300">USD Amount:</span>
-                  <span className="text-white font-semibold">${amount}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Crypto Amount:</span>
-                  <span className="text-white font-semibold">{cryptoAmount} {selectedCoin}</span>
-                </div>
-                {(hasContributionRound || publicContributionsEnabled) && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Points to Earn:</span>
-                    <span className="text-green-400 font-semibold">{getPointsForAmount(amount)} pts</span>
-                  </div>
-                )}
+              <div className="flex justify-between">
+                <span className="text-coolgray">USD Value:</span>
+                <span className="text-charcoal font-bold">${amount} USD</span>
               </div>
-            </motion.div>
+              <div className="flex justify-between">
+                <span className="text-coolgray">Estimated Crypto:</span>
+                <span className="text-[#3D7EFF] font-bold">{cryptoAmount} {selectedCoin}</span>
+              </div>
+              {(hasContributionRound || publicContributionsEnabled) && (
+                <div className="flex justify-between pt-1 border-t border-[#D4D4CE]">
+                  <span className="text-coolgray">Points Awarded:</span>
+                  <span className="text-charcoal font-bold">+{getPointsForAmount(amount)} points</span>
+                </div>
+              )}
+            </div>
           )}
 
-          {/* Generate / Scan Buttons */}
+          {/* Generate QR Button */}
           <button
+            type="button"
             onClick={handleGenerateQR}
             disabled={!amount || !selectedCoin || parseFloat(amount) < 50 || (!cryptoAmount && !walletAddress)}
-            className={`mobile-button font-semibold transition-all duration-300 touch-target ${!amount || !selectedCoin || parseFloat(amount) < 50 || (!cryptoAmount && !walletAddress)
-              ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white'
-              }`}
+            className="w-full py-3.5 px-6 bg-[#3D7EFF] hover:bg-electric-600 text-white font-mono font-bold text-xs sm:text-sm uppercase tracking-wider transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm cursor-pointer min-h-[44px]"
+            style={{ borderRadius: '0px' }}
           >
-            View estimate and wallet address (QR Code)
+            Generate Payment QR & Destination Address
           </button>
-        </motion.div>
+        </div>
 
-        {/* Standalone Submit Proof Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 mt-6"
+        {/* Submit Proof of Payment Card */}
+        <div
+          className="bg-white border border-[#D4D4CE] p-6 sm:p-8 shadow-sm space-y-5"
+          style={{ borderRadius: '0px' }}
         >
-          <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-            <CheckCircle className="w-6 h-6 mr-2" />
-            Submit Proof of Payment
-          </h3>
+          <div className="flex items-center justify-between pb-4 border-b border-[#D4D4CE]">
+            <div>
+              <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#3D7EFF]">
+                Step 2
+              </span>
+              <h3 className="text-lg sm:text-xl font-black text-charcoal tracking-tight mt-0.5">
+                Submit Proof of Payment
+              </h3>
+            </div>
+            <span className="font-mono text-[10px] text-coolgray uppercase tracking-wider">
+              Verification Dossier
+            </span>
+          </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-white font-semibold mb-2">Upload Receipt (PNG/JPG/WEBP/HEIC/PDF)</label>
+              <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                Upload Receipt File (PNG / JPG / WEBP / PDF under 5MB) <span className="text-[#3D7EFF]">*</span>
+              </label>
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/webp,image/heic,application/pdf"
                 onChange={handleReceiptChange}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none"
+                className="w-full p-2.5 bg-white border border-[#D4D4CE] text-xs font-mono text-charcoal file:mr-3 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-mono file:font-bold file:uppercase file:bg-[#3D7EFF] file:text-white cursor-pointer"
+                style={{ borderRadius: '0px' }}
               />
               {receiptFile && (
-                <div className="mt-2 text-xs text-gray-300">
-                  Selected: <span className="text-purple-300">{receiptFile.name}</span>
+                <div className="mt-2 text-xs font-mono text-[#3D7EFF] flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Selected: {receiptFile.name}</span>
                 </div>
               )}
             </div>
 
             <div>
-              <label className="block text-white font-semibold mb-2">Transaction Hash (optional)</label>
+              <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-charcoal mb-1.5">
+                Transaction Hash / Reference ID (Optional)
+              </label>
               <input
+                type="text"
                 value={transactionHash}
                 onChange={(e) => setTransactionHash(e.target.value)}
                 placeholder="0x..."
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none"
+                className="w-full px-3.5 py-3 bg-white border border-[#D4D4CE] text-charcoal text-base sm:text-sm font-medium focus:border-[#3D7EFF] focus:outline-none placeholder:text-coolgray/50"
+                style={{ borderRadius: '0px' }}
               />
             </div>
           </div>
 
           <button
+            type="button"
             onClick={handleSubmitProof}
             disabled={isSubmitting || !receiptFile}
-            className={`w-full py-3 mt-4 font-semibold rounded-lg transition-all duration-300 ${isSubmitting || !receiptFile
-              ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
-              }`}
+            className="w-full py-3.5 px-6 bg-charcoal hover:bg-black text-white font-mono font-bold text-xs sm:text-sm uppercase tracking-wider transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm cursor-pointer min-h-[44px]"
+            style={{ borderRadius: '0px' }}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit Proof'}
+            {isSubmitting ? 'Uploading & Ingesting Proof...' : 'Submit Contribution Proof'}
           </button>
-        </motion.div>
+        </div>
 
-        {/* QR Code Modal */}
+        {/* Recent Contributions History */}
+        <div
+          className="bg-white border border-[#D4D4CE] p-6 sm:p-8 shadow-sm space-y-5"
+          style={{ borderRadius: '0px' }}
+        >
+          <div className="flex items-center justify-between pb-3 border-b border-[#D4D4CE]">
+            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-charcoal flex items-center gap-2">
+              <Users className="w-4 h-4 text-[#3D7EFF]" />
+              <span>Recent Protocol Contributions</span>
+            </h3>
+            <span className="font-mono text-[10px] text-coolgray uppercase tracking-widest">Live Ledger</span>
+          </div>
+
+          <div className="space-y-2.5">
+            {recentContributions.length === 0 ? (
+              <div className="py-6 text-center">
+                <p className="font-mono text-xs text-coolgray uppercase tracking-wider">
+                  No contribution receipts recorded in session ledger.
+                </p>
+              </div>
+            ) : (
+              recentContributions.map((c, i) => {
+                const isVerified = c.status === 'verified' || c.status === 'approved';
+                return (
+                  <div
+                    key={i}
+                    className="p-3.5 bg-[#F8F8F6] border border-[#D4D4CE] flex items-center justify-between gap-3 text-xs"
+                    style={{ borderRadius: '0px' }}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`w-2 h-2 rounded-full ${isVerified ? 'bg-[#3D7EFF]' : 'bg-amber-500'}`}
+                      />
+                      <div>
+                        <p className="font-bold text-charcoal">{c.user}</p>
+                        <p className="font-mono text-[10px] text-coolgray">
+                          {new Date(c.submittedAt).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="text-right font-mono">
+                      <p className="font-black text-charcoal">${c.usdValue}</p>
+                      <span
+                        className={`text-[10px] font-bold uppercase tracking-wider ${
+                          isVerified ? 'text-[#3D7EFF]' : 'text-amber-600'
+                        }`}
+                      >
+                        {isVerified ? 'Verified' : 'Under Review'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+      </div>
+
+      {/* Swiss Architectural QR Code Modal */}
+      <AnimatePresence>
         {showQR && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
             onClick={() => setShowQR(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 sm:p-8 border border-white/20 w-full max-w-md relative"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white border border-[#D4D4CE] p-6 sm:p-8 w-full max-w-md shadow-2xl relative space-y-4"
+              style={{ borderRadius: '0px' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-4">Scan to Pay</h3>
-              <div className="bg-white p-4 rounded-lg flex items-center justify-center mb-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[#D4D4CE]">
+                <div>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#3D7EFF]">
+                    Payment Terminal
+                  </span>
+                  <h3 className="text-xl font-black text-charcoal tracking-tight">
+                    Scan to Pay ({selectedCoin})
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowQR(false)}
+                  className="p-1 text-coolgray hover:text-charcoal cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* QR Code Container */}
+              <div className="bg-[#F8F8F6] p-5 border border-[#D4D4CE] flex items-center justify-center" style={{ borderRadius: '0px' }}>
                 {wallets.find(c => c.symbol === selectedCoin)?.qrCode ? (
-                  <img src={wallets.find(c => c.symbol === selectedCoin)?.qrCode} alt="Payment QR" className="mx-auto h-56 w-56 object-contain" />
+                  <img
+                    src={wallets.find(c => c.symbol === selectedCoin)?.qrCode}
+                    alt="Payment QR"
+                    className="mx-auto h-52 w-52 object-contain"
+                  />
                 ) : (
-                  <QRCodeSVG value={generateQRCodeData()} size={224} />
+                  <QRCodeSVG value={generateQRCodeData()} size={208} />
                 )}
               </div>
-              <div className="text-center text-white mb-4">
-                <p className="text-lg font-semibold">{cryptoAmount} {selectedCoin}</p>
-                <p className="text-sm text-gray-400">≈ ${amount} USD</p>
+
+              {/* Payment Amount Display */}
+              <div className="text-center font-mono py-1">
+                <p className="text-lg font-black text-charcoal">{cryptoAmount} {selectedCoin}</p>
+                <p className="text-xs text-coolgray">≈ ${amount} USD Equivalent</p>
               </div>
-              <div className="bg-black/20 rounded-lg p-3 mb-4">
-                <p className="text-xs text-gray-400 mb-1">Send to this address:</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-purple-300 text-sm break-all mr-2">{walletAddress}</span>
-                  <button onClick={copyWalletAddress} className="p-2 rounded-md hover:bg-white/20">
-                    <Copy className="w-4 h-4 text-white" />
+
+              {/* Destination Address Copy Box */}
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE] space-y-1" style={{ borderRadius: '0px' }}>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray block">
+                  Send to Destination Address:
+                </span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs text-charcoal break-all select-all font-medium">
+                    {walletAddress}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={copyWalletAddress}
+                    className="p-2 bg-white hover:bg-[#F8F8F6] border border-[#D4D4CE] text-charcoal shrink-0 cursor-pointer"
+                    style={{ borderRadius: '0px' }}
+                    title="Copy Address"
+                  >
+                    <Copy className="w-4 h-4 text-[#3D7EFF]" />
                   </button>
                 </div>
               </div>
+
               <button
+                type="button"
                 onClick={() => setShowQR(false)}
-                className="w-full py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
+                className="w-full py-3 bg-[#3D7EFF] hover:bg-electric-600 text-white font-mono font-bold text-xs uppercase tracking-wider shadow-sm cursor-pointer"
+                style={{ borderRadius: '0px' }}
               >
-                Close
+                Done / Close Terminal
               </button>
             </motion.div>
-          </motion.div>
-        )}
-
-
-        {/* Recent Contributions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 mt-8"
-        >
-          <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-            <Users className="w-6 h-6 mr-2" />
-            Recent Contributions
-          </h3>
-          <div className="space-y-4">
-            {recentContributions.map((c, i) => {
-              const getStatusColor = (status) => {
-                switch (status) {
-                  case 'verified': return 'text-green-400';
-                  case 'approved': return 'text-green-400';
-                  case 'rejected': return 'text-red-400';
-                  case 'under_review': return 'text-blue-400';
-                  default: return 'text-yellow-400';
-                }
-              };
-              const getStatusDot = (status) => {
-                switch (status) {
-                  case 'verified': return 'bg-green-500';
-                  case 'approved': return 'bg-green-500';
-                  case 'rejected': return 'bg-red-500';
-                  case 'under_review': return 'bg-blue-500';
-                  default: return 'bg-yellow-500';
-                }
-              };
-              const getStatusLabel = (status) => {
-                if (status === 'under_review') return 'Under Review';
-                return status.charAt(0).toUpperCase() + status.slice(1);
-              };
-
-              return (
-                <div key={i} className="flex items-center justify-between bg-white/5 p-3 rounded-lg">
-                  <div className="flex items-center">
-                    <div className={`w-2 h-2 rounded-full mr-3 ${getStatusDot(c.status)}`}></div>
-                    <div>
-                      <p className="text-white font-semibold">{c.user}</p>
-                      <p className="text-xs text-gray-400">{new Date(c.submittedAt).toLocaleString()}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-white font-semibold">${c.usdValue}</p>
-                    <p className={`text-xs ${getStatusColor(c.status)}`}>
-                      {getStatusLabel(c.status)}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
           </div>
-        </motion.div>
-
-      </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

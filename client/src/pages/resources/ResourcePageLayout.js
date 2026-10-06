@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const joinNoticeHref = () => {
   try {
@@ -12,52 +12,80 @@ const joinNoticeHref = () => {
 };
 
 /**
- * Shared top area for static resource guides (matches article detail rhythm).
+ * Swiss Architectural Layout for static resource guides.
  */
 const ResourcePageLayout = ({ iconSrc, iconAlt, title, children }) => (
-  <div className="min-h-screen w-full overflow-x-hidden bg-slate-50">
-    <header className="border-b border-slate-200/80 bg-white shadow-sm">
-      <div className="w-full max-w-7xl mx-auto min-w-0 px-8 md:px-12 lg:px-16 py-8 md:py-10">
+  <div className="min-h-screen w-full overflow-x-hidden bg-[#F8F8F6] text-charcoal py-6 sm:py-10 md:py-12 selection:bg-[#3D7EFF] selection:text-white">
+    {/* Top Header Section */}
+    <header className="border-b border-[#D4D4CE] pb-6 mb-8 max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-between mb-6">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-[#0284c7]"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#D4D4CE] text-charcoal hover:border-[#3D7EFF] text-xs font-mono font-bold uppercase transition-all shadow-sm"
+          style={{ borderRadius: '0px' }}
         >
-          <ArrowLeft size={16} />
-          Back to home
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Back to Home</span>
+          <span className="sm:hidden">Back</span>
         </Link>
 
-        <div className="mx-auto mt-8 max-w-4xl min-w-0 text-center">
-          {iconSrc ? (
-            <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-slate-50 p-2 shadow-sm ring-1 ring-slate-200/80">
-              <img src={iconSrc} alt={iconAlt || ''} className="max-h-16 max-w-16 object-contain" loading="eager" />
-            </div>
-          ) : null}
-          <h1 className="break-words text-3xl font-extrabold leading-tight text-slate-900 md:text-4xl">{title}</h1>
-        </div>
+        <span
+          className="px-2.5 py-0.5 bg-white border border-[#D4D4CE] font-mono text-[10px] text-coolgray font-bold uppercase tracking-wider"
+          style={{ borderRadius: '0px' }}
+        >
+          Protocol Knowledge Base
+        </span>
+      </div>
+
+      <div className="text-center max-w-3xl mx-auto space-y-4">
+        {iconSrc && (
+          <div
+            className="mx-auto flex h-16 w-16 items-center justify-center bg-white p-2 border border-[#D4D4CE] shadow-sm"
+            style={{ borderRadius: '0px' }}
+          >
+            <img src={iconSrc} alt={iconAlt || ''} className="max-h-12 max-w-12 object-contain" loading="eager" />
+          </div>
+        )}
+        <h1 className="break-words text-3xl sm:text-4xl md:text-5xl font-black text-charcoal tracking-tight">
+          {title}
+        </h1>
       </div>
     </header>
 
-    <div className="w-full max-w-7xl mx-auto min-w-0 px-8 md:px-12 lg:px-16 py-10 md:py-14">{children}</div>
+    {/* Content Body */}
+    <main className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 space-y-8">
+      {children}
+    </main>
 
-    <div className="border-t border-slate-200 bg-slate-100/80 py-10 w-full">
-      <div className="mobile-padding flex flex-wrap items-center justify-center gap-4">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50"
-        >
-          <ArrowLeft size={18} />
-          Back to home
-        </Link>
-        <Link
-          to={joinNoticeHref()}
-          className="inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold text-white shadow-lg transition hover:scale-105"
-          style={{
-            background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)',
-            boxShadow: '0 4px 20px rgba(168, 88, 48, 0.4)'
-          }}
-        >
-          Submit your claim
-        </Link>
+    {/* Bottom Sticky/Call-to-action Footer Bar */}
+    <div className="border-t border-[#D4D4CE] mt-12 pt-8 max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 bg-white border border-[#D4D4CE] shadow-sm" style={{ borderRadius: '0px' }}>
+        <div>
+          <h3 className="text-base font-black text-charcoal tracking-tight">
+            Affected by Custodial Loss or Deceptive Schemes?
+          </h3>
+          <p className="text-xs text-coolgray mt-0.5">
+            Submit your evidentiary claim dossier to join the decentralized restitution quorum.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <Link
+            to="/"
+            className="flex-1 sm:flex-initial px-4 py-3 bg-white border border-[#D4D4CE] hover:border-charcoal text-charcoal font-mono font-bold text-xs uppercase tracking-wider transition-all text-center"
+            style={{ borderRadius: '0px' }}
+          >
+            Home
+          </Link>
+          <Link
+            to={joinNoticeHref()}
+            className="flex-1 sm:flex-initial px-6 py-3 bg-[#3D7EFF] hover:bg-blue-600 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-sm flex items-center justify-center gap-2 text-center"
+            style={{ borderRadius: '0px' }}
+          >
+            <span>Submit a Claim</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
     </div>
   </div>

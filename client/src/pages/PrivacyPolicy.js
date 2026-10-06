@@ -1,87 +1,232 @@
 import React from 'react';
-import { Lock, Mail, Send } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Lock, Mail, ShieldCheck, Check, ArrowLeft, ExternalLink, Globe } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const PrivacyPolicy = () => {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex items-center gap-3 mb-6">
-          <Lock className="w-6 h-6 text-gray-900" />
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900">ReclaimDAO - Privacy Policy</h1>
-        </div>
-        <p className="text-sm text-gray-500 mb-8">Last Updated: November 2025</p>
-        <div className="space-y-6 text-gray-800">
-          <p>This Privacy Policy explains how ReclaimDAO ("we," "our," or "the platform") collects, uses, and protects information when you use our website and decentralized services.</p>
-          <p>ReclaimDAO is designed to protect victims, ensure transparency, and maintain community trust.</p>
-          <h2 className="text-xl font-bold text-gray-900">1. What We Collect</h2>
-          <p>ReclaimDAO is built to minimize personal data collection. We collect only what is necessary to verify claims and operate the protocol.</p>
-          <h3 className="text-lg font-semibold text-gray-900">1.1 Information You Provide</h3>
-          <p>When submitting a claim or contacting us, you may voluntarily provide:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Wallet addresses and transaction hashes</li>
-            <li>Scam-related evidence (screenshots, messages, links)</li>
-            <li>Email address (optional)</li>
-            <li>Description of incident</li>
-          </ul>
-          <p>You choose what personal data to include. Do not upload sensitive documents such as passports, IDs, or bank statements unless absolutely required for verification.</p>
-          <h2 className="text-xl font-bold text-gray-900">2. Blockchain Data</h2>
-          <p>When interacting with our smart contracts, the following is permanently recorded on-chain:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Wallet addresses</li>
-            <li>RFND token balances</li>
-            <li>Proof-of-loss records</li>
-            <li>Governance actions</li>
-          </ul>
-          <p>Blockchain data is public, immutable, and outside our control.</p>
-          <h2 className="text-xl font-bold text-gray-900">3. How We Use Your Information</h2>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Verify victim claims</li>
-            <li>Assess evidence</li>
-            <li>Issue proof-of-loss tokens</li>
-            <li>Allocate governance rights</li>
-            <li>Communicate with victims and members</li>
-            <li>Improve our services</li>
-            <li>Prevent fraud and abuse</li>
-          </ul>
-          <p>We do not sell or rent your data.</p>
-          <h2 className="text-xl font-bold text-gray-900">4. How We Protect Your Information</h2>
-          <p>We apply reasonable technical and organizational measures to protect off-chain data, including:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Encrypted storage</li>
-            <li>Secure submission portals</li>
-            <li>Minimal data retention</li>
-            <li>Limited access by verification council members</li>
-          </ul>
-          <p>However, no system is completely secure, and we cannot guarantee protection against all threats.</p>
-          <h2 className="text-xl font-bold text-gray-900">5. Data Sharing</h2>
-          <p>We may share data only in the following situations:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Verification council: to evaluate claims</li>
-            <li>Partners and auditors: to improve security</li>
-            <li>Legal authorities: if required by law</li>
-            <li>Community governance: when transparency is essential</li>
-          </ul>
-          <p>We do not share data for marketing purposes.</p>
-          <h2 className="text-xl font-bold text-gray-900">6. Data Retention</h2>
-          <p>We retain off-chain submissions only as long as necessary for verification, auditability, security, and compliance.</p>
-          <p>You may request deletion of off-chain data, except on-chain data (immutable) and data required for legal or fraud-prevention reasons.</p>
-          <h2 className="text-xl font-bold text-gray-900">7. Cookies and Analytics</h2>
-          <p>ReclaimDAO may use minimal, privacy-friendly analytics to understand traffic and improve the website. We do not use invasive tracking or serve targeted ads.</p>
-          <h2 className="text-xl font-bold text-gray-900">8. Children's Privacy</h2>
-          <p>ReclaimDAO is not intended for individuals under 18. We do not knowingly collect data from minors.</p>
-          <h2 className="text-xl font-bold text-gray-900">9. Your Rights</h2>
-          <p>Depending on your jurisdiction, you may have rights to access, correct, delete, restrict, or export your data.</p>
-          <p>Requests can be made at: support@reclaimdao.org</p>
-          <h2 className="text-xl font-bold text-gray-900">10. International Users</h2>
-          <p>ReclaimDAO operates globally. By using our Services, you consent to the transfer and processing of your information across jurisdictions.</p>
-          <h2 className="text-xl font-bold text-gray-900">11. Changes to This Policy</h2>
-          <p>We may update this Privacy Policy periodically. Continued use of the Services means you accept the revised version.</p>
-          <h2 className="text-xl font-bold text-gray-900">12. Contact</h2>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-gray-900"><Mail className="w-5 h-5 text-[#10b981]" /><span>support@reclaimdao.org</span></div>
-            <div className="flex items-center gap-2 text-gray-900"><Send className="w-5 h-5 text-[#10b981]" /><span>reclaimdao.org</span></div>
+    <div className="min-h-screen bg-[#F8F8F6] text-charcoal py-8 sm:py-12 md:py-16 selection:bg-[#3D7EFF] selection:text-white">
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+
+        {/* Masthead Header Section */}
+        <div className="border-b border-[#D4D4CE] pb-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#D4D4CE] text-charcoal text-[11px] font-mono font-bold uppercase tracking-wider shadow-sm"
+              style={{ borderRadius: '0px' }}
+            >
+              <Lock className="w-3.5 h-3.5 text-[#3D7EFF]" />
+              <span>Legal Compliance • Data Encryption Protocol</span>
+            </div>
+
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#D4D4CE] text-charcoal hover:border-[#3D7EFF] text-xs font-mono font-bold uppercase transition-all shadow-sm"
+              style={{ borderRadius: '0px' }}
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Back to Home</span>
+              <span className="sm:hidden">Back</span>
+            </Link>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-charcoal tracking-tight">
+            Protocol <span className="text-[#3D7EFF]">Privacy Policy</span>
+          </h1>
+
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <span
+              className="px-2.5 py-0.5 bg-white border border-[#D4D4CE] font-mono text-[11px] text-coolgray font-bold uppercase tracking-wider"
+              style={{ borderRadius: '0px' }}
+            >
+              Effective Date: November 2025
+            </span>
+            <span
+              className="px-2.5 py-0.5 bg-[#3D7EFF]/10 border border-[#3D7EFF]/30 font-mono text-[11px] text-[#3D7EFF] font-bold uppercase tracking-wider"
+              style={{ borderRadius: '0px' }}
+            >
+              Revision 2.4
+            </span>
           </div>
         </div>
+
+        {/* Main Document Body */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="bg-white border border-[#D4D4CE] p-6 sm:p-10 md:p-12 shadow-sm space-y-8"
+          style={{ borderRadius: '0px' }}
+        >
+          {/* Preamble */}
+          <div className="space-y-3 pb-6 border-b border-[#D4D4CE]">
+            <p className="text-sm sm:text-base text-charcoal font-medium leading-relaxed">
+              This Privacy Policy explains how ReclaimDAO (&quot;we,&quot; &quot;our,&quot; or &quot;the platform&quot;) collects, uses, and safeguards evidentiary information when claimants interact with our portal, decentralized smart contracts, and restitution consensus mechanisms.
+            </p>
+            <p className="text-xs sm:text-sm text-coolgray leading-relaxed">
+              ReclaimDAO is architected to protect victims of financial exploitation, uphold immutable accountability, and maintain institutional community trust through cryptographic minimization of personal identifiers.
+            </p>
+          </div>
+
+          {/* Section 1 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[11px] font-black text-[#3D7EFF] bg-[#F8F8F6] border border-[#D4D4CE] px-2 py-0.5" style={{ borderRadius: '0px' }}>
+                01
+              </span>
+              <h2 className="text-lg sm:text-xl font-black text-charcoal tracking-tight">
+                What We Collect
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-coolgray leading-relaxed">
+              ReclaimDAO is built on data-minimization principles. We collect only what is strictly necessary to conduct forensic evidentiary verification and operate restitution pools.
+            </p>
+            <div className="bg-[#F8F8F6] border border-[#D4D4CE] p-4 space-y-2" style={{ borderRadius: '0px' }}>
+              <span className="font-mono text-[11px] font-bold text-charcoal uppercase tracking-wider block">
+                Information You Voluntarily Provide:
+              </span>
+              <ul className="text-xs text-coolgray space-y-1.5 font-mono">
+                <li className="flex items-start gap-2">
+                  <Check className="w-3.5 h-3.5 text-[#3D7EFF] shrink-0 mt-0.5" />
+                  <span>Public settlement wallet addresses and fraudulent transaction hashes (TXIDs)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-3.5 h-3.5 text-[#3D7EFF] shrink-0 mt-0.5" />
+                  <span>Evidentiary records (screenshots, communication receipts, routing links)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-3.5 h-3.5 text-[#3D7EFF] shrink-0 mt-0.5" />
+                  <span>Cryptographic contact identifiers (email, optional Telegram/phone handle)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-3.5 h-3.5 text-[#3D7EFF] shrink-0 mt-0.5" />
+                  <span>Narrative description of the custody loss incident</span>
+                </li>
+              </ul>
+            </div>
+            <p className="text-xs text-coolgray italic">
+              <strong>Notice:</strong> Please do not upload unredacted government passports, national IDs, or bank accounts unless specifically requested by verification council compliance channels.
+            </p>
+          </div>
+
+          {/* Section 2: On-chain Blockchain Data */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[11px] font-black text-[#3D7EFF] bg-[#F8F8F6] border border-[#D4D4CE] px-2 py-0.5" style={{ borderRadius: '0px' }}>
+                02
+              </span>
+              <h2 className="text-lg sm:text-xl font-black text-charcoal tracking-tight">
+                Blockchain Data & Immutable Ledger Records
+              </h2>
+            </div>
+            <div className="p-4 bg-[#F8F8F6] border-l-4 border-l-[#3D7EFF] border border-[#D4D4CE] space-y-2" style={{ borderRadius: '0px' }}>
+              <p className="text-xs sm:text-sm text-charcoal leading-relaxed font-medium">
+                When interacting with decentralized smart contracts, certain telemetry is permanently committed to distributed ledgers:
+              </p>
+              <ul className="text-xs text-coolgray font-mono space-y-1">
+                <li>• Public settlement destination wallet addresses</li>
+                <li>• On-chain Proof-of-Loss (RFND) token ledger minting</li>
+                <li>• Consensus ballot submissions and proposal quorum casting</li>
+              </ul>
+              <p className="text-[11px] font-mono text-coolgray pt-1 border-t border-[#D4D4CE]">
+                Distributed ledger records are globally public, mathematically permanent, and impossible to retroactively erase or amend.
+              </p>
+            </div>
+          </div>
+
+          {/* Section 3 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[11px] font-black text-[#3D7EFF] bg-[#F8F8F6] border border-[#D4D4CE] px-2 py-0.5" style={{ borderRadius: '0px' }}>
+                03
+              </span>
+              <h2 className="text-lg sm:text-xl font-black text-charcoal tracking-tight">
+                How We Utilize Claimant Information
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-coolgray leading-relaxed">
+              We process dossier information exclusively for protocol operational validity:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE]" style={{ borderRadius: '0px' }}>
+                <span className="font-bold text-charcoal block">• Claim Verification</span>
+                <span className="text-coolgray text-[11px]">Audit loss dossiers against blockchain analytics</span>
+              </div>
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE]" style={{ borderRadius: '0px' }}>
+                <span className="font-bold text-charcoal block">• Quorum Allocation</span>
+                <span className="text-coolgray text-[11px]">Calculate governance weights and ballot quotas</span>
+              </div>
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE]" style={{ borderRadius: '0px' }}>
+                <span className="font-bold text-charcoal block">• Claimant Communications</span>
+                <span className="text-coolgray text-[11px]">Transmit critical restitution distribution notices</span>
+              </div>
+              <div className="p-3 bg-[#F8F8F6] border border-[#D4D4CE]" style={{ borderRadius: '0px' }}>
+                <span className="font-bold text-charcoal block">• Fraud Prevention</span>
+                <span className="text-coolgray text-[11px]">Prevent duplicate submissions and sybil exploitation</span>
+              </div>
+            </div>
+            <p className="text-xs font-bold text-charcoal pt-1">
+              We do not sell, rent, monetize, or commercialize claimant records to third parties.
+            </p>
+          </div>
+
+          {/* Section 4 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[11px] font-black text-[#3D7EFF] bg-[#F8F8F6] border border-[#D4D4CE] px-2 py-0.5" style={{ borderRadius: '0px' }}>
+                04
+              </span>
+              <h2 className="text-lg sm:text-xl font-black text-charcoal tracking-tight">
+                Security Infrastructure & Protection
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-coolgray leading-relaxed">
+              We enforce rigorous technical safeguards including end-to-end encrypted storage, rate-limited submission gateways, authenticated session telemetry, and compartmentalized forensic review access.
+            </p>
+          </div>
+
+          {/* Section 5 & 6 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[11px] font-black text-[#3D7EFF] bg-[#F8F8F6] border border-[#D4D4CE] px-2 py-0.5" style={{ borderRadius: '0px' }}>
+                05
+              </span>
+              <h2 className="text-lg sm:text-xl font-black text-charcoal tracking-tight">
+                Retention & Claimant Privacy Rights
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-coolgray leading-relaxed">
+              Off-chain telemetry is retained only for the duration required to complete forensic audit and compliance verification. Depending on your jurisdiction, you have the right to request access, correction, or deletion of off-chain records by contacting protocol operations.
+            </p>
+          </div>
+
+          {/* Contact Box */}
+          <div className="pt-6 border-t border-[#D4D4CE] space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="font-mono text-[10px] font-bold text-[#3D7EFF] uppercase tracking-wider block">
+                  Official Communication Channel
+                </span>
+                <h3 className="text-base font-black text-charcoal tracking-tight">
+                  Contact Protocol Data Protection
+                </h3>
+              </div>
+              <ShieldCheck className="w-5 h-5 text-[#3D7EFF]" />
+            </div>
+
+            <div className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono" style={{ borderRadius: '0px' }}>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-[#3D7EFF]" />
+                <span className="text-charcoal font-bold">support@reclaimdao.org</span>
+              </div>
+              <div className="flex items-center gap-2 text-coolgray">
+                <Globe className="w-4 h-4 text-[#3D7EFF]" />
+                <span>reclaimdao.org</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
       </div>
     </div>
   );

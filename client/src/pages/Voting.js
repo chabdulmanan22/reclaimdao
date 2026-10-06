@@ -5,12 +5,17 @@ import {
   Vote,
   Clock,
   AlertCircle,
-  BarChart3
+  BarChart3,
+  ShieldCheck,
+  Check,
+  ArrowRight,
+  CheckCircle2,
+  Users
 } from 'lucide-react';
 import { AuthContext } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import { getUserMeta, castVote, getActiveVotes as dsGetActiveVotes, submitVoteOption as dsSubmitVoteOption, addPoints } from '../utils/datastore';
+import { getActiveVotes as dsGetActiveVotes } from '../utils/datastore';
 
 const Voting = () => {
   const { user } = useContext(AuthContext);
@@ -23,8 +28,6 @@ const Voting = () => {
   const [activeVotes, setActiveVotes] = useState([]);
   const [now, setNow] = useState(Date.now());
   const [selectedOptions, setSelectedOptions] = useState({}); // { [voteId]: optionId }
-
-  // No dummy stats/history; page reflects live datastore state only
 
   const loadUserRights = async () => {
     try {
@@ -53,7 +56,6 @@ const Voting = () => {
       try {
         const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        // Get ALL active votes - no limit on number of simultaneous active votes
         const res = await axios.get('/api/votes', {
           params: { status: 'active', limit: 200 },
           headers
@@ -93,10 +95,7 @@ const Voting = () => {
     loadVotes();
     loadUserRights();
 
-    // Ticker for smooth animation and progressive counting
     const tick = setInterval(() => setNow(Date.now()), 1000);
-
-    // Polling for vote data updates (e.g. if admin changed offsets/targets)
     const poll = setInterval(loadVotes, 15000);
 
     const onUpdate = () => loadVotes();
@@ -118,8 +117,8 @@ const Voting = () => {
         if (el) {
           setTimeout(() => {
             el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            el.classList.add('ring-4', 'ring-purple-500');
-            setTimeout(() => el.classList.remove('ring-4', 'ring-purple-500'), 3000);
+            el.classList.add('border-2', 'border-[#3D7EFF]');
+            setTimeout(() => el.classList.remove('border-2', 'border-[#3D7EFF]'), 3000);
           }, 500);
         }
       }
@@ -310,8 +309,10 @@ const Voting = () => {
 
   if (isInitialLoading && activeVotes.length === 0) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
-        <div className="text-[#0d0c43] text-xl animate-pulse font-semibold">Loading voting data...</div>
+      <div className="min-h-screen bg-[#F8F8F6] flex items-center justify-center">
+        <div className="font-mono text-charcoal text-sm uppercase tracking-wider font-bold animate-pulse">
+          Synchronizing consensus ledger...
+        </div>
       </div>
     );
   }
@@ -320,204 +321,327 @@ const Voting = () => {
   const headerUsed = activeVotes.reduce((acc, vote) => acc + getVoteRights(vote).used, 0);
   const headerRemaining = activeVotes.reduce((acc, vote) => acc + getVoteRights(vote).remaining, 0);
 
-  const totalDisplayedVotes = (activeVotes || []).reduce((sum, v) => {
-    return sum + (v.options || []).reduce((optSum, opt) => optSum + getDisplayedVotes(v, opt), 0);
-  }, 0);
-
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 sm:mb-8"
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <Vote className="w-8 h-8 text-slate-900" />
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              DAO <span className="text-[#A85830]">Voting</span>
-            </h1>
-          </div>
-          <p className="text-slate-600 text-sm sm:text-base max-w-3xl font-medium">
-            Cast your vote on decisions and earn points
-          </p>
-        </motion.div>
+    <div className="min-h-screen bg-[#F8F8F6] text-charcoal py-6 sm:py-10 md:py-12 selection:bg-[#3D7EFF] selection:text-white">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
 
-        {/* Ineligibility Message for 0 Verified Loss */}
+        {/* Masthead Header Section */}
+        <div className="border-b border-[#D4D4CE] pb-6 space-y-2.5">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#D4D4CE] text-charcoal text-[11px] font-mono font-bold uppercase tracking-wider shadow-sm"
+            style={{ borderRadius: '0px' }}
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-[#3D7EFF]" />
+            <span>Decentralized Consensus • Protocol Ballot Node</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-charcoal tracking-tight">
+            DAO <span className="text-[#3D7EFF]">Voting</span>
+          </h1>
+
+          <p className="text-coolgray text-xs sm:text-base max-w-2xl leading-relaxed">
+            Cast your consensus votes on restitution disbursements, escrow payouts, and community decisions.
+          </p>
+        </div>
+
+        {/* Ineligibility Warning (Only if user has 0 verified loss) */}
         {user && (user.verifiedLoss || 0) <= 0 && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mb-8 p-6 rounded-2xl bg-red-950/90 border-2 border-red-500/70 backdrop-blur-md flex items-start gap-4 shadow-xl"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-5 bg-white border-l-4 border-l-red-500 border border-[#D4D4CE] shadow-sm flex items-start gap-3.5"
+            style={{ borderRadius: '0px' }}
           >
-            <div className="bg-red-600 rounded-full p-2.5 flex-shrink-0 animate-pulse shadow-md">
-              <AlertCircle className="w-6 h-6 text-white" />
+            <div className="p-2 bg-red-50 border border-red-200 text-red-600 shrink-0">
+              <AlertCircle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-white text-xl font-black tracking-tight mb-1">Voting Restricted</h3>
-              <p className="text-red-100 font-bold text-sm sm:text-base leading-snug">
-                You are not eligible to vote because you do not have a verified loss.
-              </p>
-              <p className="text-red-200 font-bold text-xs mt-2.5 bg-red-900/80 px-3 py-1.5 rounded-lg border border-red-500/40 inline-block shadow-xs">
-                Voting is reserved for verified holders who have experienced financial losses.
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-red-600">
+                Restricted Participation
+              </span>
+              <h3 className="text-base font-black text-charcoal tracking-tight mt-0.5">
+                Voting Allocation Restricted
+              </h3>
+              <p className="text-xs text-coolgray font-medium mt-1 leading-relaxed">
+                You are not currently eligible to submit ballots because your profile does not have an audited loss dossier. Voting rights are reserved for authenticated claimants with on-chain damage.
               </p>
             </div>
           </motion.div>
         )}
 
-        {/* Voting Status Section */}
+        {/* Voting Status / Quorum Card */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4"
+          className="bg-white border border-[#D4D4CE] p-6 sm:p-7 shadow-sm space-y-5"
+          style={{ borderRadius: '0px' }}
         >
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900">Voting <span className="text-[#A85830]">Status</span></h3>
-          </div>
-          <div className="bg-[#0a254d] text-white rounded-2xl p-6 sm:p-7 border border-sky-400/25 shadow-xl">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="p-3 bg-[#A85830]/15 text-[#A85830] rounded-xl mr-4 border border-[#A85830]/30">
-                  <Vote className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold text-white">Your Voting Allocation</h4>
-                  <p className="text-white font-bold text-sm mt-0.5">
-                    Voting rights: <span className="text-[#10b981] font-extrabold">{headerRemaining}</span> of <span className="text-white font-black">{headerAllowed}</span> remaining
-                  </p>
-                  <p className="text-white font-bold text-xs mt-0.5">
-                    Used: <span className="text-white font-black">{headerUsed}</span>
-                  </p>
-                </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#D4D4CE]">
+            <div className="flex items-center gap-3">
+              <div
+                className="p-2.5 bg-[#F8F8F6] border border-[#D4D4CE] text-[#3D7EFF]"
+                style={{ borderRadius: '0px' }}
+              >
+                <Vote className="w-5 h-5" />
               </div>
+              <div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#3D7EFF]">
+                  Claimant Allocation
+                </span>
+                <h3 className="text-lg sm:text-xl font-black text-charcoal tracking-tight">
+                  Your Voting Quorum
+                </h3>
+              </div>
+            </div>
+
+            <div
+              className="font-mono text-xs text-charcoal bg-[#F8F8F6] border border-[#D4D4CE] px-3 py-1.5 self-start sm:self-auto"
+              style={{ borderRadius: '0px' }}
+            >
+              <span>Active Rounds: <strong className="text-charcoal font-black">{activeVotes.length}</strong></span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+            <div
+              className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] flex flex-col justify-between"
+              style={{ borderRadius: '0px' }}
+            >
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray">
+                Total Allocated
+              </span>
+              <span className="text-2xl sm:text-3xl font-black text-charcoal tracking-tight mt-1">
+                {headerAllowed}
+              </span>
+              <span className="text-[11px] font-mono text-coolgray mt-1">
+                Authorized voting rights
+              </span>
+            </div>
+
+            <div
+              className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] flex flex-col justify-between"
+              style={{ borderRadius: '0px' }}
+            >
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-coolgray">
+                Ballots Cast
+              </span>
+              <span className="text-2xl sm:text-3xl font-black text-charcoal tracking-tight mt-1">
+                {headerUsed}
+              </span>
+              <span className="text-[11px] font-mono text-coolgray mt-1">
+                Submissions finalized
+              </span>
+            </div>
+
+            <div
+              className="p-4 bg-[#F8F8F6] border border-[#D4D4CE] flex flex-col justify-between"
+              style={{ borderRadius: '0px' }}
+            >
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#3D7EFF]">
+                Remaining Rights
+              </span>
+              <span className="text-2xl sm:text-3xl font-black text-[#3D7EFF] tracking-tight mt-1">
+                {headerRemaining}
+              </span>
+              <span className="text-[11px] font-mono text-coolgray mt-1">
+                Available to cast
+              </span>
             </div>
           </div>
         </motion.div>
 
-        {/* Active Votes Section */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 mb-8">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900">Active <span className="text-[#A85830]">Proposals</span></h3>
+        {/* Active Proposals Section */}
+        <div
+          className="bg-white border border-[#D4D4CE] p-6 sm:p-8 shadow-sm space-y-6"
+          style={{ borderRadius: '0px' }}
+        >
+          <div className="flex items-center justify-between pb-4 border-b border-[#D4D4CE]">
+            <div>
+              <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#3D7EFF]">
+                Active Ballots
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black text-charcoal tracking-tight mt-0.5">
+                Active Governance Proposals
+              </h2>
+            </div>
+            <span className="font-mono text-[10px] sm:text-[11px] text-coolgray uppercase tracking-widest hidden sm:inline">
+              Consensus Engine
+            </span>
           </div>
 
           {(!activeVotes || activeVotes.length === 0) ? (
-            <div className="bg-[#0a254d] text-white rounded-2xl p-10 border border-sky-400/25 shadow-xl text-center">
-              <div className="flex flex-col items-center gap-3">
-                <AlertCircle className="w-10 h-10 text-[#A85830]" />
-                <p className="text-white text-base font-bold">No active voting round. Please check back later.</p>
-              </div>
+            <div
+              className="p-10 text-center bg-[#F8F8F6] border border-[#D4D4CE] space-y-3"
+              style={{ borderRadius: '0px' }}
+            >
+              <Vote className="w-10 h-10 text-coolgray mx-auto" />
+              <h4 className="text-base font-black text-charcoal">No Active Ballot Proposals</h4>
+              <p className="text-xs text-coolgray font-mono max-w-md mx-auto">
+                There are currently no active governance rounds open for voting. Please check back when a new restitution proposal is staged.
+              </p>
             </div>
           ) : (
             <div className="space-y-6">
-              {activeVotes.map((vote) => (
-                <motion.div
-                  key={vote.id}
-                  id={`vote-${vote.id}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#0a254d] text-white rounded-2xl p-6 sm:p-8 border border-sky-400/25 hover:border-[#A85830]/50 shadow-xl transition-all"
-                >
-                  <div className="flex items-center mb-4">
-                    <div className="p-2.5 bg-sky-500/15 text-sky-300 rounded-xl mr-3 border border-sky-400/30">
-                      <BarChart3 className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white">{vote.title}</h3>
-                  </div>
-                  {vote.description && (
-                    <p className="text-white font-bold text-sm sm:text-base mb-6 leading-relaxed">{vote.description}</p>
-                  )}
-                  {vote.endTime && (
-                    <div className="mb-6 p-3.5 bg-[#061833] border border-sky-400/20 rounded-xl flex items-center gap-2.5">
-                      <Clock className="w-4 h-4 text-[#A85830]" />
-                      <span className="text-white font-bold text-sm">Time remaining:</span>
-                      <span className="font-mono font-bold text-[#A85830]">{formatRemaining(vote.endTime)}</span>
-                    </div>
-                  )}
-                  <div className="space-y-3.5">
-                    {vote.options.map((opt) => {
-                      const isSelected = selectedOptions[vote.id] === opt.id;
-                      const { remaining: perRoundRemaining } = getVoteRights(vote);
-                      const hasVerifiedLoss = (user?.verifiedLoss || 0) > 0;
-                      const disabled = vote.status !== 'active' || perRoundRemaining <= 0 || !hasVerifiedLoss;
+              {activeVotes.map((vote) => {
+                const { remaining: perRoundRemaining, total: perRoundTotal } = getVoteRights(vote);
+                const hasVerifiedLoss = (user?.verifiedLoss || 0) > 0;
+                const isRoundDisabled = vote.status !== 'active' || perRoundRemaining <= 0 || !hasVerifiedLoss;
 
-                      const displayedVotes = getDisplayedVotes(vote, opt);
-                      const goalVotes = opt.targetVotes || 0;
-
-                      const totalInRound = vote.options.reduce((acc, o) => acc + getDisplayedVotes(vote, o), 0);
-                      const smoothDisplayed = getSmoothValue(vote, opt);
-                      const smoothWidth = goalVotes > 0
-                        ? Math.min(100, (smoothDisplayed / goalVotes) * 100)
-                        : getSmoothProgress(vote, opt);
-
-                      return (
-                        <div key={opt.id} className="relative">
-                          <button
-                            onClick={() => !disabled && onSelectOption(vote, opt)}
-                            disabled={disabled}
-                            className={`w-full p-4 sm:p-5 rounded-xl border transition-all duration-300 flex items-center justify-between relative overflow-hidden ${
-                              isSelected 
-                                ? 'border-[#A85830] bg-[#0c2e5c] shadow-lg shadow-[#A85830]/20 ring-1 ring-[#A85830]/50' 
-                                : 'border-sky-400/20 bg-[#061833]/80 hover:border-[#A85830]/40 hover:bg-[#061833]'
-                            } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          >
-                            {/* Background fill */}
-                            <div
-                              className="absolute left-0 top-0 bottom-0 bg-[#A85830]/15 transition-all duration-1000"
-                              style={{ width: `${smoothWidth}%` }}
-                            />
-
-                            <div className="flex items-center gap-3 relative z-10">
-                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                isSelected ? 'border-[#A85830] bg-[#A85830]' : 'border-slate-400 bg-transparent'
-                              }`}>
-                                {isSelected && <div className="w-2 h-2 rounded-full bg-[#0a254d]" />}
-                              </div>
-                              <span className="font-bold text-white text-base">{opt.text}</span>
-                            </div>
-                            <div className="text-right relative z-10">
-                              <span className="text-base font-black text-white block">
-                                {displayedVotes}
-                              </span>
-                              <span className="text-[10px] text-white font-bold">
-                                Total votes
-                              </span>
-                            </div>
-                          </button>
-
-                          {/* Animated bottom bar */}
-                          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5 rounded-b-xl overflow-hidden">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              animate={{ width: `${smoothWidth}%` }}
-                              transition={{ duration: 0.8, ease: 'easeOut' }}
-                              className="h-full bg-gradient-to-r from-[#A85830] to-[#ea580c]"
-                            />
-                          </div>
+                return (
+                  <motion.div
+                    key={vote.id}
+                    id={`vote-${vote.id}`}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white border border-[#D4D4CE] p-6 sm:p-7 hover:border-charcoal transition-all space-y-5"
+                    style={{ borderRadius: '0px' }}
+                  >
+                    {/* Proposal Header */}
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                      <div className="flex items-start gap-3">
+                        <div
+                          className="p-2.5 bg-[#F8F8F6] border border-[#D4D4CE] text-[#3D7EFF] shrink-0"
+                          style={{ borderRadius: '0px' }}
+                        >
+                          <BarChart3 className="w-5 h-5" />
                         </div>
-                      );
-                    })}
-                  </div>
-                  <div className="mt-5 text-xs text-white font-bold flex items-center justify-between">
-                    <span>Your remaining in this round: <strong className="text-[#A85830] font-black">{getVoteRights(vote).remaining}</strong> of {getVoteRights(vote).total}</span>
-                  </div>
-                  <div className="mt-6 flex items-center justify-end gap-3">
-                    <button
-                      onClick={() => onSubmitVote(vote)}
-                      disabled={selectedOptions[vote.id] == null || vote.status !== 'active' || (
-                        getVoteRights(vote).remaining <= 0
+                        <div>
+                          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#3D7EFF]">
+                            Proposal ID: #{String(vote.id).slice(-6).toUpperCase()}
+                          </span>
+                          <h3 className="text-lg sm:text-xl font-black text-charcoal tracking-tight mt-0.5">
+                            {vote.title}
+                          </h3>
+                        </div>
+                      </div>
+
+                      {/* Time Remaining Badge */}
+                      {vote.endTime && (
+                        <div
+                          className="p-2 px-3 bg-[#F8F8F6] border border-[#D4D4CE] flex items-center gap-2 self-start sm:self-auto"
+                          style={{ borderRadius: '0px' }}
+                        >
+                          <Clock className="w-3.5 h-3.5 text-[#3D7EFF]" />
+                          <span className="text-[11px] font-mono text-coolgray uppercase">Closes:</span>
+                          <span className="font-mono font-bold text-xs text-charcoal">
+                            {formatRemaining(vote.endTime)}
+                          </span>
+                        </div>
                       )}
-                      className="px-6 py-2.5 text-white rounded-xl disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-[#A85830]/25 transition-all font-black text-sm cursor-pointer hover:scale-105"
-                      style={{ background: 'linear-gradient(135deg, #A85830 0%, #964d28 50%, #854221 100%)' }}
-                    >
-                      Submit Vote
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
+                    </div>
+
+                    {/* Proposal Description */}
+                    {vote.description && (
+                      <p className="text-xs sm:text-sm text-coolgray leading-relaxed border-l-2 border-[#D4D4CE] pl-3 py-0.5">
+                        {vote.description}
+                      </p>
+                    )}
+
+                    {/* Options Grid */}
+                    <div className="space-y-3">
+                      {vote.options.map((opt) => {
+                        const isSelected = selectedOptions[vote.id] === opt.id;
+                        const displayedVotes = getDisplayedVotes(vote, opt);
+                        const goalVotes = opt.targetVotes || 0;
+                        const smoothDisplayed = getSmoothValue(vote, opt);
+                        const smoothWidth = goalVotes > 0
+                          ? Math.min(100, (smoothDisplayed / goalVotes) * 100)
+                          : getSmoothProgress(vote, opt);
+
+                        return (
+                          <div key={opt.id} className="relative">
+                            <button
+                              type="button"
+                              onClick={() => !isRoundDisabled && onSelectOption(vote, opt)}
+                              disabled={isRoundDisabled}
+                              className={`w-full p-4 border transition-all flex items-center justify-between relative overflow-hidden text-left cursor-pointer min-h-[48px] ${
+                                isSelected
+                                  ? 'border-[#3D7EFF] bg-[#F8F8F6] shadow-sm ring-1 ring-[#3D7EFF]'
+                                  : 'border-[#D4D4CE] bg-white hover:border-charcoal'
+                              } ${isRoundDisabled ? 'opacity-60 cursor-not-allowed' : ''}`}
+                              style={{ borderRadius: '0px' }}
+                            >
+                              {/* Background Progress Fill */}
+                              <div
+                                className="absolute left-0 top-0 bottom-0 bg-[#3D7EFF]/10 transition-all duration-700 pointer-events-none"
+                                style={{ width: `${smoothWidth}%` }}
+                              />
+
+                              {/* Option Text & Checkmark */}
+                              <div className="flex items-center gap-3 relative z-10 min-w-0 pr-4">
+                                <div
+                                  className={`w-4 h-4 border flex items-center justify-center shrink-0 transition-colors ${
+                                    isSelected
+                                      ? 'border-[#3D7EFF] bg-[#3D7EFF] text-white'
+                                      : 'border-[#D4D4CE] bg-white'
+                                  }`}
+                                  style={{ borderRadius: '0px' }}
+                                >
+                                  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                                </div>
+                                <span className="font-bold text-charcoal text-xs sm:text-sm break-words line-clamp-2">
+                                  {opt.text}
+                                </span>
+                              </div>
+
+                              {/* Votes Numbers */}
+                              <div className="text-right relative z-10 shrink-0 font-mono">
+                                <span className="text-xs sm:text-sm font-black text-charcoal block">
+                                  {displayedVotes.toLocaleString()}
+                                </span>
+                                <span className="text-[10px] text-coolgray uppercase">
+                                  {Math.round(smoothWidth)}% votes
+                                </span>
+                              </div>
+                            </button>
+
+                            {/* Hairline Bottom Indicator */}
+                            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-transparent overflow-hidden pointer-events-none">
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${smoothWidth}%` }}
+                                transition={{ duration: 0.8, ease: 'easeOut' }}
+                                className="h-full bg-[#3D7EFF]"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Footer Bar: Quorum Info & Submit Button */}
+                    <div className="pt-4 border-t border-[#D4D4CE] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="text-xs font-mono text-coolgray">
+                        <span>Your round allowance: </span>
+                        <strong className="text-charcoal font-black">{perRoundRemaining}</strong>
+                        <span> of {perRoundTotal} remaining</span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => onSubmitVote(vote)}
+                        disabled={
+                          selectedOptions[vote.id] == null ||
+                          vote.status !== 'active' ||
+                          perRoundRemaining <= 0 ||
+                          submittingVoteId === vote.id
+                        }
+                        className="w-full sm:w-auto px-6 py-3 bg-[#3D7EFF] hover:bg-electric-600 text-white font-mono font-bold text-xs uppercase tracking-wider disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px]"
+                        style={{ borderRadius: '0px' }}
+                      >
+                        <Vote className="w-4 h-4" />
+                        <span>
+                          {submittingVoteId === vote.id ? 'Submitting Vote...' : 'Submit Consensus Vote'}
+                        </span>
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </div>
+
       </div>
     </div>
   );
